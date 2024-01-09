@@ -5,6 +5,9 @@ var SlotBookingEndTime;
 var SlotDuration;
 var StartDate;
 var OutOfOfficeTimeSlot = [];
+var noOfAccompanyingPeople;
+var bookings = [];
+var storeName;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -54,7 +57,7 @@ function getStoreTypes() {
     });
 }
 function storeNameHandler() {
-    var storeName = $("#storeDropdown option:selected").text();
+    storeName = $("#storeDropdown option:selected").text();
     console.log("storeName", storeName);
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
@@ -110,16 +113,16 @@ function handleNavigate(newDate) {
             if (isDisabled) {
                 $("#slots").append(`
                   <li title='Slot not available'
-                    key={key}
+                    key='${item}'
                     className='leavedays-wrapper-OutOfc closed'>
                     ${item}
                   </li>
                 `);
             } else {
                 $("#slots").append(`  
-                <li  key=${key}
+                <li  key='${item}'
                 class="leavedays-wrapper-OutOfc"
-                onclick="handleTimeSlotSelection('${item}')"
+                onclick="handleTimeSlotSelection(event,'${item}')"
                 >
                  ${item}
                  </li>`)
@@ -194,11 +197,100 @@ function GetAccompanyPeopleCount() {
 }
 function handleAccompanyingPeople(people) {
     if (people == 0) {
+        noOfAccompanyingPeople = people;
         $("#accompanying_text").text("If you select 0,You are not permitted to have any guests with you.")
     } else {
+        noOfAccompanyingPeople = people;
         $("#accompanying_text").text(`If you select ${people},You are permitted to have ${people} guests with you.`)
     }
 }
-function handleTimeSlotSelection(value) {
-    console.log(value)
+function handleTimeSlotSelection(event, value) {
+    if (noOfAccompanyingPeople !== undefined) {
+        const clickedLiElement = event.currentTarget;
+        clickedLiElement.classList.add('select');
+        const timeString = event.target.textContent;
+        console.log("timeString", timeString);
+        if (timeString) {
+            const timeArray = timeString.split("to");
+            console.log("timeString2", timeString);
+
+            const storeStartTime = timeArray[0].trim();
+            const storeEndTime = timeArray[1].trim();
+
+            // Use a unique identifier based on the time range
+            const uniqueIdentifier = `${storeStartTime}-${storeEndTime}`;
+
+            // Check if the booking with the same time range already exists
+            const isBookingExists = bookings.some(
+                (booking) => booking.uniqueIdentifier === uniqueIdentifier
+            );
+
+            if (!isBookingExists) {
+                const bookingID = "BKNG-" + moment().format("DMYHMS");
+                const newBooking = {
+                    id: bookingID,
+                    storeName,
+                    accompanyingPeople: noOfAccompanyingPeople,
+                    selectedDate: moment(selectedDateValue).format("DD-MM-YYYY"),
+                    timeRange: `${storeStartTime} to ${storeEndTime}`,
+                    uniqueIdentifier,
+                };
+                console.log("newBooking", newBooking);
+
+                // Update the state with the new booking
+                bookings.push(newBooking)
+                console.log("this.booking", bookings);
+                $("#booked_slots").empty();
+                bookings.map((item) => {
+                    $("#booked_slots").append(` <tr key=${item.id}>
+                    <td>${item.storeName}</td>
+                    <td>${item.accompanyingPeople}</td>
+                    <td>${moment(item.selectedDate).format("DD-MM-YYYY")}</td>
+                    <td>${item.timeRange}</td>
+                    <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
+                </tr>`)
+                })
+
+            } else {
+                console.log('Booking already exists for this time range.');
+            }
+        } else {
+            console.error("Invalid TimeString:", timeString);
+        }
+    } else {
+        this.FireSwalalert("error", "Please select the No Of Accompanying People Field  !");
+    }
 }
+function removeHandler(bookingID) {
+    // Find the booking with the specified ID
+    const removedBooking = bookings.find((booking) => booking.id === bookingID);
+
+    // Filter out the booking with the specified ID
+    const updatedBookings = bookings.filter((booking) => booking.id !== bookingID);
+
+    // Add the class to the corresponding li element based on the unique identifier
+    if (removedBooking) {
+        const liElements = document.querySelectorAll('li.leavedays-wrapper-OutOfc');
+        liElements.forEach(li => {
+            const liUniqueIdentifier = li.getAttribute('key');
+            if (liUniqueIdentifier === removedBooking.uniqueIdentifier) {
+                li.classList.remove('select');
+            }
+        });
+    }
+    // Update the state with the filtered bookings
+    bookings = [];
+    bookings = updatedBookings;
+    $("#booked_slots").empty();
+    bookings.map((item) => {
+        $("#booked_slots").append(` <tr key=${item.id}>
+                    <td>${item.storeName}</td>
+                    <td>${item.accompanyingPeople}</td>
+                    <td>${moment(item.selectedDate).format("DD-MM-YYYY")}</td>
+                    <td>${item.timeRange}</td>
+                    <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
+                </tr>`)
+    })
+    console.log("this.bookingRemove", bookings);
+
+};
