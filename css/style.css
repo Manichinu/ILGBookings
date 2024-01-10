@@ -3006,3 +3006,6 @@ body {
 td.selected-date {
     background: #fcf8e3;
 }
+.err-msg{
+    color: red;
+}

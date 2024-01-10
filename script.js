@@ -11,14 +11,23 @@ var storeName;
 var storeID;
 var selectedDateValue;
 var appointmentDate;
+var userName;
+var phoneNo;
+var emailId;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
     GetAccompanyPeopleCount();
     getStoreTypes();
-    $("#name").on('change', function (e) {
+    $("#name").on('keyup', function (e) {
         nameHandler(e);
-    })
+    });
+    $("#number").on('keyup', function (e) {
+        phoneHandler(e);
+    });
+    $("#email").on('keyup', function (e) {
+        emailHandler(e);
+    });
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -303,9 +312,6 @@ function removeHandler(bookingID) {
 
 };
 function saveStoreDetailsForm() {
-    var userName = $("#name").val();
-    var emailId = $("#email").val();
-    var phoneNo = $("#number").val();
     if (!userName || !emailId || !phoneNo || !storeName || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
         FireSwalalert("error", "Please fill all the details first!");
     } else {
@@ -355,24 +361,83 @@ function reqoff() {
     location.reload();
 }
 function nameHandler(event) {
-    alert("nd")
     const enteredName = event.target.value.trim();
     const fnameregex = /^[a-zA-Z][a-zA-Z ]*$/;
     const hasSpecialCharacter = /[!@#$%^&*;,<>'"|+]/.test(enteredName);
     if (enteredName.length < 3 || enteredName === "") {
         // Handle case when length is less than 3 or empty
-        $("#fname-error").show();
+        userName = "",
+            $("#fname-error").show();
         $("#fname-error").text("Name should be at least 3 characters long.");
     } else if (hasSpecialCharacter) {
-        // Handle case when a special character is present        
-        $("#fname-error").show();
+        // Handle case when a special character is present     
+        userName = "",
+            $("#fname-error").show();
         $("#fname-error").text("Name should not contain special characters.");
     } else if (!enteredName.match(fnameregex)) {
-        // Handle case when the name doesn't match the regex        
-        $("#fname-error").show();
+        // Handle case when the name doesn't match the regex 
+        userName = "",
+            $("#fname-error").show();
         $("#fname-error").text("Invalid name format.");
     } else {
         // Valid name
-        $("#fname-error").hide();
+        userName = enteredName,
+            $("#fname-error").hide();
     }
+}
+function phoneHandler(event) {
+    const enteredPhone = event.target.value.trim();
+    const phonereg = /^[+\d][\d]*$/;
+    const hasAlphabets = /[a-zA-Z]/.test(enteredPhone);
+    const hasSpecialCharacters = /[!@#$%^&*;,<>'"|]/.test(enteredPhone);
+
+    if (enteredPhone.length <= 9) {
+        phoneNo = "";
+        $("#phone-error").show();
+        $("#phone-error").text("Phone should be 10 Digit");
+    }
+    else if (hasAlphabets || hasSpecialCharacters) {
+        // Handle case when phone has alphabets or special characters
+        phoneNo = "";
+        $("#phone-error").show();
+        $("#phone-error").text("Phone should not contain alphabets or special characters.");
+    } else if (!enteredPhone.match(phonereg)) {
+        // Handle case when phone doesn't match the regex
+        phoneNo = "",
+            $("#phone-error").show();
+        $("#phone-error").text("Invalid phone format.");
+    } else {
+        // Valid phone
+        phoneNo = enteredPhone,
+            $("#phone-error").hide();
+    }
+
+}
+function emailHandler(event) {
+    const enteredEmail = event.target.value.trim();
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if (!enteredEmail.match(mailformat)) {
+        // Handle case when email doesn't match the regex
+        emailId = "";
+        $("#email-error").show();
+        $("#email-error").text("Invalid email format check.");
+    } else {
+        // Valid email
+        emailId = enteredEmail;
+
+        // Check if the entered email matches the additional format
+        if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,}$/)) {
+            emailId = "",
+                this.setState({
+                    // emailId: "",
+                    emailError: "Invalid email format .",
+                });
+            $("#email-error").show();
+            $("#email-error").text("Invalid email format.");
+            return;
+        }
+        $("#email-error").hide();
+    }
+
 }
