@@ -219,7 +219,6 @@ function GetAccompanyPeopleCount() {
             $("#people_select li").removeClass("select");
             $(this).addClass("select");
         });
-
     });
 }
 function handleAccompanyingPeople(people) {
@@ -240,7 +239,6 @@ function handleTimeSlotSelection(event, value) {
         if (timeString) {
             const timeArray = timeString.split("to");
             console.log("timeString2", timeString);
-
             const storeStartTime = timeArray[0].trim();
             const storeEndTime = timeArray[1].trim();
 
@@ -251,7 +249,6 @@ function handleTimeSlotSelection(event, value) {
             const isBookingExists = bookings.some(
                 (booking) => booking.uniqueIdentifier === uniqueIdentifier
             );
-
             if (!isBookingExists) {
                 const bookingID = "BKNG-" + moment().format("DMYHMS");
                 const newBooking = {
@@ -263,7 +260,6 @@ function handleTimeSlotSelection(event, value) {
                     uniqueIdentifier,
                 };
                 console.log("newBooking", newBooking);
-
                 // Update the state with the new booking
                 bookings.push(newBooking)
                 console.log("this.booking", bookings);
@@ -291,10 +287,8 @@ function handleTimeSlotSelection(event, value) {
 function removeHandler(bookingID) {
     // Find the booking with the specified ID
     const removedBooking = bookings.find((booking) => booking.id === bookingID);
-
     // Filter out the booking with the specified ID
     const updatedBookings = bookings.filter((booking) => booking.id !== bookingID);
-
     // Add the class to the corresponding li element based on the unique identifier
     if (removedBooking) {
         const liElements = document.querySelectorAll('li.leavedays-wrapper-OutOfc');
@@ -355,11 +349,9 @@ function saveStoreDetailsForm() {
                 };
 
                 $.ajax(postItem).done(function (response) {
-
                 });
             });
             $("#StoreBookingURL").show();
-
         } catch (error) {
             console.error(error);
             FireSwalalert("error", "An error occurred while saving.");
@@ -435,7 +427,6 @@ function emailHandler(event) {
     } else {
         // Valid email
         emailId = enteredEmail;
-
         // Check if the entered email matches the additional format
         if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,}$/)) {
             emailId = "",

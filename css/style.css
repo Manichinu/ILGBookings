@@ -3006,9 +3006,16 @@ body {
 td.selected-date {
     background: #fcf8e3;
 }
-.err-msg{
+
+.err-msg {
     color: red;
 }
-#calendar{
+
+#calendar {
     cursor: pointer !important;
+}
+
+.required span {
+    color: red;
+    padding: 2px;
 }
