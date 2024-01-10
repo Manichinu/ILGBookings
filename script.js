@@ -19,6 +19,11 @@ $(document).ready(function () {
     GetOutOfOfficeDetails();
     GetAccompanyPeopleCount();
     getStoreTypes();
+    $('#number').keypress(function (e) {
+        var charCode = (e.which) ? e.which : event.keyCode
+        if (String.fromCharCode(charCode).match(/[^0-9]/g))
+            return false;
+    });
     $("#name").on('keyup', function (e) {
         nameHandler(e);
     });
@@ -75,6 +80,7 @@ function storeNameHandler() {
     console.log("storeName", storeName);
     storeID = storeName;
     console.log("storeID", storeID);
+    $("#slots").empty();
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
         "method": "POST",
@@ -235,7 +241,7 @@ function handleTimeSlotSelection(event, value) {
             const storeEndTime = timeArray[1].trim();
 
             // Use a unique identifier based on the time range
-            const uniqueIdentifier = `${storeStartTime}-${storeEndTime}`;
+            const uniqueIdentifier = `${storeStartTime} to ${storeEndTime}`;
 
             // Check if the booking with the same time range already exists
             const isBookingExists = bookings.some(
@@ -258,7 +264,7 @@ function handleTimeSlotSelection(event, value) {
                 bookings.push(newBooking)
                 console.log("this.booking", bookings);
                 $("#booked_slots").empty();
-                bookings.map((item) => {
+                bookings.map((item, key) => {
                     $("#booked_slots").append(` <tr key=${item.id}>
                     <td>${item.storeName}</td>
                     <td>${item.accompanyingPeople}</td>
