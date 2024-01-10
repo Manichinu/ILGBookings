@@ -29,13 +29,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="usr" class="float-label">Name</label>
-                            <input type="text" placeholder="Enzo" class="form-control" id="usr">
+                            <input type="text" placeholder="Enzo" class="form-control" id="name" />
+                            <p id="fname-error"></p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="usr" class="float-label">Phone no</label>
-                            <input type="text" placeholder="*71- 564-56-675" class="form-control" id="usr">
+                            <input type="text" placeholder="*71- 564-56-675" class="form-control" id="number" />
                         </div>
                     </div>
 
@@ -44,7 +45,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="usr" class="float-label">E-mail</label>
-                            <input type="text" placeholder="abc@gmail.com" class="form-control" id="usr">
+                            <input type="text" placeholder="abc@gmail.com" class="form-control" id="email" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -142,8 +143,8 @@
                 </div>
             </div>
             <div class="req-btn">
-                <button class="btn-wrap" onclick="reqon()">Request Appointment</button>
-                <div id="StoreBookingURL" style="display: block;">
+                <button class="btn-wrap" onclick="saveStoreDetailsForm()">Request Appointment</button>
+                <div id="StoreBookingURL" style="display: none;">
                     <div id="schedule" class="overlay-1">
                         <div class="popup_header_2 clearfix">
                             <img src="./img/close-icon.svg" onclick="reqoff()" alt="close-icon" class="close-icon">
@@ -166,17 +167,6 @@
 
 
 
-
-        <script>
-            document.getElementById("StoreBookingURL").style.display = "none";
-            function reqon() {
-                document.getElementById("StoreBookingURL").style.display = "block";
-            }
-
-            function reqoff() {
-                document.getElementById("StoreBookingURL").style.display = "none";
-            }
-        </script>
 
 </body>
 

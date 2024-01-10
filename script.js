@@ -8,11 +8,17 @@ var OutOfOfficeTimeSlot = [];
 var noOfAccompanyingPeople;
 var bookings = [];
 var storeName;
+var storeID;
+var selectedDateValue;
+var appointmentDate;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
     GetAccompanyPeopleCount();
     getStoreTypes();
+    $("#name").on('change', function (e) {
+        nameHandler(e);
+    })
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -38,7 +44,6 @@ $(document).ready(function () {
     //     console.log('Selected Date: ' + selectedDate.format('YYYY-MM-DD'));
     // });
 })
-
 function getStoreTypes() {
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
@@ -59,6 +64,8 @@ function getStoreTypes() {
 function storeNameHandler() {
     storeName = $("#storeDropdown option:selected").text();
     console.log("storeName", storeName);
+    storeID = storeName;
+    console.log("storeID", storeID);
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
         "method": "POST",
@@ -101,6 +108,7 @@ function handleNavigate(newDate) {
     } else {
         $(".not-possible-to-choose").removeClass("show");
         selectedDateValue = date;
+        appointmentDate = selectedDateValue;
         const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, selectedDateValue);
         console.log("Timeslots array : " + generatedTimeSlots);
         timeSlots = [];
@@ -294,3 +302,77 @@ function removeHandler(bookingID) {
     console.log("this.bookingRemove", bookings);
 
 };
+function saveStoreDetailsForm() {
+    var userName = $("#name").val();
+    var emailId = $("#email").val();
+    var phoneNo = $("#number").val();
+    if (!userName || !emailId || !phoneNo || !storeName || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        FireSwalalert("error", "Please fill all the details first!");
+    } else {
+        try {
+            bookings.map((item, key) => {
+                var strTimerange = item.timeRange;
+                var times = strTimerange.split("to");
+                var postItem = {
+                    url: "https://prod-12.uaecentral.logic.azure.com:443/workflows/9d18b3d41e50421b9e33f932cda8a1cb/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q-8WdB1KrgXrdUsIeOePAXdrzuCPr0wRktw1EKy6O7I",
+                    method: "POST",
+                    timeout: 0,
+                    cors: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        "Accept": "application/json; odata=nometadata",
+                        "Content-Type": "application/json; odata=nometadata"
+                    },
+                    "data": JSON.stringify({
+                        Name: userName,
+                        Email: emailId,
+                        Number: parseInt(phoneNo),
+                        StoreName: storeName,
+                        AppointmentStartTime: times[0],
+                        AppointmentEndTime: times[1],
+                        AppointmentDate: item.selectedDate,
+                        NoOfAccompanyingPeople: parseInt(noOfAccompanyingPeople),
+                        BookingId: item.id,
+                        StoreID: storeID,
+                        RequestFrom: "User"
+                    }),
+                };
+
+                $.ajax(postItem).done(function (response) {
+
+                });
+            });
+            $("#StoreBookingURL").show();
+
+        } catch (error) {
+            console.error(error);
+            FireSwalalert("error", "An error occurred while saving.");
+        }
+    }
+}
+function reqoff() {
+    $("#StoreBookingURL").hide();
+    location.reload();
+}
+function nameHandler(event) {
+    alert("nd")
+    const enteredName = event.target.value.trim();
+    const fnameregex = /^[a-zA-Z][a-zA-Z ]*$/;
+    const hasSpecialCharacter = /[!@#$%^&*;,<>'"|+]/.test(enteredName);
+    if (enteredName.length < 3 || enteredName === "") {
+        // Handle case when length is less than 3 or empty
+        $("#fname-error").show();
+        $("#fname-error").text("Name should be at least 3 characters long.");
+    } else if (hasSpecialCharacter) {
+        // Handle case when a special character is present        
+        $("#fname-error").show();
+        $("#fname-error").text("Name should not contain special characters.");
+    } else if (!enteredName.match(fnameregex)) {
+        // Handle case when the name doesn't match the regex        
+        $("#fname-error").show();
+        $("#fname-error").text("Invalid name format.");
+    } else {
+        // Valid name
+        $("#fname-error").hide();
+    }
+}
