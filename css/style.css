@@ -3009,3 +3009,6 @@ td.selected-date {
 .err-msg{
     color: red;
 }
+#calendar{
+    cursor: pointer !important;
+}
