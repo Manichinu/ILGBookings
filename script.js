@@ -42,11 +42,14 @@ $(document).ready(function () {
         defaultDate: new Date(),
         editable: false,
         dayClick: function (date, jsEvent, view) {
-            $('.fc-day').removeClass('fc-today');
-            $('.fc-day').removeClass('selected-date');
-            $(jsEvent.target).addClass('selected-date');
+            $('td.fc-day').removeClass('fc-today');
+            $('td.fc-day').removeClass('selected-date');
             var Date = date.format();
             selectedDateValue = Date;
+            setTimeout(() => {
+                $('td[data-date="' + Date + '"]').addClass('selected-date');
+                // $(jsEvent.target).addClass('selected-date');
+            }, 100)
             handleNavigate(Date);
             console.log('Selected Date: ' + date.format());
         }
