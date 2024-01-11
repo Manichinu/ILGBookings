@@ -356,7 +356,7 @@ function removeHandler(bookingID) {
         $("#booked_slots").append(` <tr key=${item.id}>
                     <td>${item.storeName}</td>
                     <td>${item.accompanyingPeople}</td>
-                    <td>${moment(item.selectedDate).format("DD-MM-YYYY")}</td>
+                    <td>${item.selectedDate}</td>
                     <td>${item.timeRange}</td>
                     <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
                 </tr>`)
