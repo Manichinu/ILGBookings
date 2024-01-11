@@ -37,6 +37,7 @@ $(document).ready(function () {
         if ($("#storeDropdown").val() != "null") {
             $("#store-error").hide();
         } else {
+            $("#no_slot").show();
             $("#store-error").show();
             $("#map_location").hide();
             EndDate = "";
@@ -48,26 +49,22 @@ $(document).ready(function () {
     });
     $('#calendar').fullCalendar({
         header: {
-            left: 'prev,next today',
+            left: 'next today',
             center: 'title',
             right: 'month'
         },
         defaultDate: new Date(),
         editable: false,
         dayClick: function (date, jsEvent, view) {
-            $('td').removeClass('fc-today');
-            $('td').removeClass('selected-date');
             var Date = date.format();
             selectedDateValue = Date;
-            setTimeout(() => {
-                $('td[data-date="' + Date + '"]').addClass('selected-date');
-                // $(jsEvent.target).addClass('selected-date');
-            }, 100)
-            if ($("#storeDropdown").val() == "null") {
-                FireSwalalert("warning", "Please select a store and booking slot date");
+            $("#select_date").text(Date)
+            if (moment(Date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
+                return;
+            } else {
+                handleNavigate(Date);
+                console.log('Selected Date: ' + date.format());
             }
-            handleNavigate(Date);
-            console.log('Selected Date: ' + date.format());
         }
     });
     // $('#calendar').on('click', '.fc-day', function () {
@@ -111,6 +108,7 @@ function storeNameHandler() {
         },
     };
     $.ajax(Items).done(function (response) {
+        var CurrentDate = moment().format('YYYY-MM-DD');
         for (var i = 0; i < response.length; i++) {
             if (response[i].Title == storeName) {
                 console.log("StoreLocation", response[i].MapLocation)
@@ -123,6 +121,12 @@ function storeNameHandler() {
                 $("#enddate").text(moment(EndDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#location").attr("href", response[i].MapLocation)
                 $("#map_location").show();
+                handleNavigate(CurrentDate);
+                $('td').removeClass('fc-today');
+                $('td').removeClass('selected-date');
+                setTimeout(() => {
+                    $('td[data-date="' + CurrentDate + '"]').addClass('selected-date');
+                }, 100)
             }
         }
     });
@@ -137,15 +141,25 @@ function handleNavigate(newDate) {
         $("#accompanying_people").hide();
         FireSwalalert("error", "You cannot select past dates!");
         date = moment().format('YYYY-MM-DD');
+        $("#no_slot").show();
         return;
     } else {
         $("#accompanying_people").show();
+        $("#no_slot").hide();
+        $('td').removeClass('fc-today');
+        $('td').removeClass('selected-date');
+        setTimeout(() => {
+            $('td[data-date="' + selectedDateValue + '"]').addClass('selected-date');
+            // $(jsEvent.target).addClass('selected-date');
+        }, 100)
     }
 
     if (moment(date, "YYYY-MM-DD").isAfter(moment(EndDate, "DD-MM-YYYY"))) {
         $(".not-possible-to-choose").addClass("show");
         $("#slots").empty();
+        $("#no_slot").show();
     } else {
+        $("#no_slot").hide();
         $(".not-possible-to-choose").removeClass("show");
         selectedDateValue = date;
         appointmentDate = selectedDateValue;
@@ -176,6 +190,13 @@ function handleNavigate(newDate) {
                  </li>`)
             }
         })
+    }
+
+    if ($("#storeDropdown").val() == "null") {
+        FireSwalalert("warning", "Please select a store and booking slot date");
+        $("#no_slot").show();
+    } else {
+        $("#no_slot").hide();
     }
 }
 function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
@@ -302,7 +323,7 @@ function handleTimeSlotSelection(event, value) {
             console.error("Invalid TimeString:", timeString);
         }
     } else {
-        this.FireSwalalert("error", "Please select the No Of Accompanying People Field  !");
+        FireSwalalert("error", "Please select the No of Accompanying People Field  !");
     }
 }
 function removeHandler(bookingID) {
@@ -416,12 +437,7 @@ function phoneHandler(event) {
     const hasAlphabets = /[a-zA-Z]/.test(enteredPhone);
     const hasSpecialCharacters = /[!@#$%^&*;,<>'"|]/.test(enteredPhone);
 
-    if (enteredPhone.length <= 9) {
-        phoneNo = "";
-        $("#phone-error").show();
-        $("#phone-error").text("Phone should be 10 Digit");
-    }
-    else if (hasAlphabets || hasSpecialCharacters) {
+    if (hasAlphabets || hasSpecialCharacters) {
         // Handle case when phone has alphabets or special characters
         phoneNo = "";
         $("#phone-error").show();
@@ -430,7 +446,7 @@ function phoneHandler(event) {
         // Handle case when phone doesn't match the regex
         phoneNo = "",
             $("#phone-error").show();
-        $("#phone-error").text("Invalid phone format.");
+        // $("#phone-error").text("Invalid phone format.");
     } else {
         // Valid phone
         phoneNo = enteredPhone,
@@ -442,26 +458,28 @@ function emailHandler(event) {
     const enteredEmail = event.target.value.trim();
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (!enteredEmail.match(mailformat)) {
+    // if (!enteredEmail.match(mailformat)) {
+    if (enteredEmail == "") {
         // Handle case when email doesn't match the regex
         emailId = "";
         $("#email-error").show();
-        $("#email-error").text("Invalid email format check.");
+        // $("#email-error").text("Invalid email format check.");
     } else {
         // Valid email
         emailId = enteredEmail;
-        // Check if the entered email matches the additional format
-        if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,}$/)) {
-            emailId = "",
-                this.setState({
-                    // emailId: "",
-                    emailError: "Invalid email format .",
-                });
-            $("#email-error").show();
-            $("#email-error").text("Invalid email format.");
-            return;
-        }
         $("#email-error").hide();
+        // Check if the entered email matches the additional format
+        // if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,}$/)) {
+        //     emailId = "",
+        //         this.setState({
+        //             // emailId: "",
+        //             emailError: "Invalid email format .",
+        //         });
+        //     $("#email-error").show();
+        //     $("#email-error").text("Invalid email format.");
+        //     return;
+        // }
+        // $("#email-error").hide();
     }
 
 }

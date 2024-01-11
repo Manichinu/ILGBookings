@@ -3017,9 +3017,9 @@ body {
     color: red;
 }
 
-#calendar {
+/* #calendar {
     cursor: pointer !important;
-}
+} */
 
 .required span {
     color: red;
@@ -3151,4 +3151,19 @@ body {
 td.selected-date {
     /* background: #f79e88; */
     border-radius: 4px;
+}
+
+#no_slot {
+    text-align: center;
+    margin-top: 64px;
+}
+
+.fc-past {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fc-future {
+    cursor: pointer !important;
 }
