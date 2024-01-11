@@ -33,6 +33,19 @@ $(document).ready(function () {
     $("#email").on('keyup', function (e) {
         emailHandler(e);
     });
+    $("#storeDropdown").on('change', function (e) {
+        if ($("#storeDropdown").val() != "null") {
+            $("#store-error").hide();
+        } else {
+            $("#store-error").show();
+            $("#map_location").hide();
+            EndDate = "";
+            slotBookingStartTime = "";
+            SlotBookingEndTime = "";
+            SlotDuration = "";
+            StartDate = "";
+        }
+    });
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -50,6 +63,9 @@ $(document).ready(function () {
                 $('td[data-date="' + Date + '"]').addClass('selected-date');
                 // $(jsEvent.target).addClass('selected-date');
             }, 100)
+            if ($("#storeDropdown").val() == "null") {
+                FireSwalalert("warning", "Please select a store and booking slot date");
+            }
             handleNavigate(Date);
             console.log('Selected Date: ' + date.format());
         }
@@ -106,6 +122,7 @@ function storeNameHandler() {
                 $("#startdate").text(moment(StartDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#enddate").text(moment(EndDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#location").attr("href", response[i].MapLocation)
+                $("#map_location").show();
             }
         }
     });
@@ -116,9 +133,13 @@ function handleNavigate(newDate) {
     timeSlots = [];
     var date = moment(newDate).format('YYYY-MM-DD');
     if (moment(date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
-        FireSwalalert("error", "You can not select past date");
+        $("#slots").empty();
+        $("#accompanying_people").hide();
+        FireSwalalert("error", "You cannot select past dates!");
         date = moment().format('YYYY-MM-DD');
+        return;
     } else {
+        $("#accompanying_people").show();
     }
 
     if (moment(date, "YYYY-MM-DD").isAfter(moment(EndDate, "DD-MM-YYYY"))) {
@@ -316,45 +337,47 @@ function removeHandler(bookingID) {
 
 };
 function saveStoreDetailsForm() {
-    if (!userName || !emailId || !phoneNo || !storeName || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
-        FireSwalalert("error", "Please fill all the details first!");
-    } else {
-        try {
-            bookings.map((item, key) => {
-                var strTimerange = item.timeRange;
-                var times = strTimerange.split("to");
-                var postItem = {
-                    url: "https://prod-12.uaecentral.logic.azure.com:443/workflows/9d18b3d41e50421b9e33f932cda8a1cb/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q-8WdB1KrgXrdUsIeOePAXdrzuCPr0wRktw1EKy6O7I",
-                    method: "POST",
-                    timeout: 0,
-                    cors: true,
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        "Accept": "application/json; odata=nometadata",
-                        "Content-Type": "application/json; odata=nometadata"
-                    },
-                    "data": JSON.stringify({
-                        Name: userName,
-                        Email: emailId,
-                        Number: parseInt(phoneNo),
-                        StoreName: storeName,
-                        AppointmentStartTime: times[0],
-                        AppointmentEndTime: times[1],
-                        AppointmentDate: item.selectedDate,
-                        NoOfAccompanyingPeople: parseInt(noOfAccompanyingPeople),
-                        BookingId: item.id,
-                        StoreID: storeID,
-                        RequestFrom: "User"
-                    }),
-                };
+    if (formValidation()) {
+        if (!userName || !emailId || !phoneNo || !storeName || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+            FireSwalalert("error", "Please fill all the details first!");
+        } else {
+            try {
+                bookings.map((item, key) => {
+                    var strTimerange = item.timeRange;
+                    var times = strTimerange.split("to");
+                    var postItem = {
+                        url: "https://prod-12.uaecentral.logic.azure.com:443/workflows/9d18b3d41e50421b9e33f932cda8a1cb/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=q-8WdB1KrgXrdUsIeOePAXdrzuCPr0wRktw1EKy6O7I",
+                        method: "POST",
+                        timeout: 0,
+                        cors: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                            "Accept": "application/json; odata=nometadata",
+                            "Content-Type": "application/json; odata=nometadata"
+                        },
+                        "data": JSON.stringify({
+                            Name: userName,
+                            Email: emailId,
+                            Number: parseInt(phoneNo),
+                            StoreName: storeName,
+                            AppointmentStartTime: times[0],
+                            AppointmentEndTime: times[1],
+                            AppointmentDate: item.selectedDate,
+                            NoOfAccompanyingPeople: parseInt(noOfAccompanyingPeople),
+                            BookingId: item.id,
+                            StoreID: storeID,
+                            RequestFrom: "User"
+                        }),
+                    };
 
-                $.ajax(postItem).done(function (response) {
+                    $.ajax(postItem).done(function (response) {
+                    });
                 });
-            });
-            $("#StoreBookingURL").show();
-        } catch (error) {
-            console.error(error);
-            FireSwalalert("error", "An error occurred while saving.");
+                $("#StoreBookingURL").show();
+            } catch (error) {
+                console.error(error);
+                FireSwalalert("error", "An error occurred while saving.");
+            }
         }
     }
 }
@@ -441,4 +464,36 @@ function emailHandler(event) {
         $("#email-error").hide();
     }
 
+}
+function formValidation() {
+    var FormStatus = true;
+    var Name = $("#name").val();
+    var Number = $("#number").val();
+    var Email = $("#email").val();
+    var Store = $("#storeDropdown").val();
+    if (Name == "") {
+        FormStatus = false;
+        $("#fname-error").show();
+    } else {
+        $("#fname-error").hide();
+    }
+    if (Number == "") {
+        FormStatus = false;
+        $("#phone-error").show();
+    } else {
+        $("#phone-error").hide();
+    }
+    if (Email == "") {
+        FormStatus = false;
+        $("#email-error").show();
+    } else {
+        $("#email-error").hide();
+    }
+    if (Store == "null") {
+        FormStatus = false;
+        $("#store-error").show();
+    } else {
+        $("#store-error").hide();
+    }
+    return FormStatus;
 }
