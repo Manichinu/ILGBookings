@@ -299,7 +299,7 @@ function handleTimeSlotSelection(event, value) {
                 (booking) => booking.uniqueIdentifier === uniqueIdentifier
             );
             if (!isBookingExists) {
-                const bookingID = "BKNG-" + moment().format("DMYHMS");
+                const bookingID = "BKNG-" + moment().format("DDMMYYYYHHmmss");
                 const newBooking = {
                     id: bookingID,
                     storeName,
