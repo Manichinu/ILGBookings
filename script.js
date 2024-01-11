@@ -42,8 +42,8 @@ $(document).ready(function () {
         defaultDate: new Date(),
         editable: false,
         dayClick: function (date, jsEvent, view) {
-            $('td.fc-day').removeClass('fc-today');
-            $('td.fc-day').removeClass('selected-date');
+            $('td').removeClass('fc-today');
+            $('td').removeClass('selected-date');
             var Date = date.format();
             selectedDateValue = Date;
             setTimeout(() => {

@@ -3003,8 +3003,14 @@ body {
     margin-bottom: 35px;
 }
 
-td.selected-date {
-    background: #fcf8e3;
+.selected-date span {
+    /* background: #fcf8e3; */
+    background: #f27766 !important;
+    padding: 3px 4px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 12px !important;
+    padding-top: 4px;
 }
 
 .err-msg {
@@ -3018,4 +3024,131 @@ td.selected-date {
 .required span {
     color: red;
     padding: 2px;
+}
+
+/* 10/1/24 updated css by mariammal */
+
+.fc-toolbar {
+    background: #F27766;
+    border-top-right-radius: 4px !important;
+    border-top-left-radius: 4px !important;
+    height: 48px;
+    margin-bottom: 0 !important;
+}
+
+.fc-toolbar button {
+    background: transparent !important;
+    border: transparent !important;
+    color: #fff !important;
+    margin-bottom: 0 !important;
+    /* padding: 15px !important; */
+    font-size: 14px !important;
+    border-radius: 4px !important;
+    box-shadow: unset;
+    margin-top: 10px !important;
+    text-shadow: unset;
+    opacity: 1;
+}
+
+.fc-center h2 {
+    color: #fff;
+    font-size: 14px;
+    margin-top: 18px !important;
+}
+
+.fc-toolbar .fc-right {
+    float: right;
+    margin-right: 7px;
+}
+
+.fc th {
+    padding: 10px !important;
+    padding-top: 20px !important;
+    font-size: 12px !important;
+}
+
+.fc-view-container {
+    height: 300px !important;
+    background: #FFE7E0;
+    border-radius: 4px;
+}
+
+.fc-day-top {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+    float: unset !important;
+}
+
+.fc-basic-view .fc-body .fc-row {
+    min-height: auto !important;
+    margin: 5px;
+}
+
+.fc-row .fc-content-skeleton {
+    padding: 10px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.fc-scroller {
+    overflow: auto !important;
+}
+
+.fc-unthemed td.fc-today span {
+    background: #f27766 !important;
+    padding: 3px 4px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 12px !important;
+    padding-top: 4px;
+}
+
+.fc td,
+.fc th {
+    border-style: solid;
+    border-width: 0px !important;
+    padding: 0;
+    vertical-align: top;
+}
+
+.fc-unthemed td.fc-today {
+    background: transparent !Important;
+}
+
+.location-label {
+    font-family: 'poppins-regular';
+    font-size: 12px;
+    color: rgb(0 0 0/55%);
+}
+
+.add-map .location-map {
+    padding: 0 15px;
+}
+
+.fc td,
+.fc th {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0;
+    vertical-align: top;
+    padding: 3px !important;
+}
+
+/* td.selected-date {
+    background: transparent !important;
+}
+#calendar td.selected-date span{
+    background: #f27766 !important;
+    padding: 3px 4px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 12px !important;
+    padding-top: 4px;
+} */
+td.selected-date {
+    /* background: #f79e88; */
+    border-radius: 4px;
 }
