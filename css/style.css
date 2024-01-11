@@ -3006,7 +3006,7 @@ body {
 .selected-date span {
     /* background: #fcf8e3; */
     background: #f27766 !important;
-    padding: 3px 4px;
+    padding: 5px 6px !important;
     border-radius: 14px;
     color: #fff;
     font-size: 12px !important;
@@ -3068,7 +3068,7 @@ body {
 }
 
 .fc-view-container {
-    height: 300px !important;
+    height: 335px !important;
     background: #FFE7E0;
     border-radius: 4px;
 }
@@ -3084,7 +3084,7 @@ body {
 
 .fc-basic-view .fc-body .fc-row {
     min-height: auto !important;
-    margin: 5px;
+    margin: 0;
 }
 
 .fc-row .fc-content-skeleton {
@@ -3094,12 +3094,12 @@ body {
 }
 
 .fc-scroller {
-    overflow: auto !important;
+    overflow: hidden !important;
 }
 
 .fc-unthemed td.fc-today span {
     background: #f27766 !important;
-    padding: 3px 4px;
+    padding: 5px 6px !important;
     border-radius: 14px;
     color: #fff;
     font-size: 12px !important;
@@ -3166,4 +3166,17 @@ td.selected-date {
 
 .fc-future {
     cursor: pointer !important;
+}
+
+.fc-head .fc-head-container {
+    padding-top: 20px !important;
+}
+
+.closed {
+    background-color: #F5F5F5 !important;
+}
+
+.store-appoinment-page .select-slot-time ul {
+    max-height: 190px;
+    overflow-y: auto;
 }

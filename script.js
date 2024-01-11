@@ -58,10 +58,10 @@ $(document).ready(function () {
         dayClick: function (date, jsEvent, view) {
             var Date = date.format();
             selectedDateValue = Date;
-            $("#select_date").text(Date)
             if (moment(Date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
                 return;
             } else {
+                $("#select_date").text(Date)
                 handleNavigate(Date);
                 console.log('Selected Date: ' + date.format());
             }
@@ -155,11 +155,15 @@ function handleNavigate(newDate) {
     }
 
     if (moment(date, "YYYY-MM-DD").isAfter(moment(EndDate, "DD-MM-YYYY"))) {
+        $("#accompanying_people").hide()
+        $("#slot_times").hide()
         $(".not-possible-to-choose").addClass("show");
         $("#slots").empty();
         $("#no_slot").show();
     } else {
         $("#no_slot").hide();
+        $("#accompanying_people").show()
+        $("#slot_times").show()
         $(".not-possible-to-choose").removeClass("show");
         selectedDateValue = date;
         appointmentDate = selectedDateValue;
@@ -176,7 +180,7 @@ function handleNavigate(newDate) {
                 $("#slots").append(`
                   <li title='Slot not available'
                     key='${item}'
-                    className='leavedays-wrapper-OutOfc closed'>
+                    class='leavedays-wrapper-OutOfc closed'>
                     ${item}
                   </li>
                 `);
@@ -193,11 +197,14 @@ function handleNavigate(newDate) {
     }
 
     if ($("#storeDropdown").val() == "null") {
-        FireSwalalert("warning", "Please select a store and booking slot date");
+        FireSwalalert("warning", "Please select a store and then booking slot date");
         $("#no_slot").show();
     } else {
         $("#no_slot").hide();
     }
+    bookings.map((item) => {
+        $("li[key='" + item.timeRange + "']").addClass('select');
+    })
 }
 function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
     const timeSlots = [];
@@ -360,7 +367,7 @@ function removeHandler(bookingID) {
 function saveStoreDetailsForm() {
     if (formValidation()) {
         if (!userName || !emailId || !phoneNo || !storeName || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
-            FireSwalalert("error", "Please fill all the details first!");
+            FireSwalalert("warning", "Please select atleast one slot!");
         } else {
             try {
                 bookings.map((item, key) => {
