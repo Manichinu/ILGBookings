@@ -15,6 +15,7 @@ var userName;
 var phoneNo;
 var emailId;
 var Count = 0;
+var NameLength;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -27,11 +28,6 @@ $(document).ready(function () {
     });
     $("#name").on('keyup', function (e) {
         nameHandler(e);
-        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
-            $("#submit").prop("disabled", true);
-        } else {
-            $("#submit").prop("disabled", false);
-        }
     });
     $("#number").on('keyup', function (e) {
         phoneHandler(e);
@@ -348,6 +344,11 @@ function handleTimeSlotSelection(event, value) {
                 } else {
                     $("#submit").prop("disabled", false);
                 }
+                if (NameLength == false) {
+                    $("#submit").prop("disabled", true);
+                } else {
+                    $("#submit").prop("disabled", false);
+                }
 
             } else {
                 console.log('Booking already exists for this time range.');
@@ -448,12 +449,16 @@ function nameHandler(event) {
     const enteredName = event.target.value.trim();
     const fnameregex = /^[a-zA-Z][a-zA-Z ]*$/;
     const hasSpecialCharacter = /[!@#$%^&*;,<>'"|+]/.test(enteredName);
-    if (enteredName.length < 3 || enteredName === "") {
+
+
+    if (enteredName.length < 3) {
         // Handle case when length is less than 3 or empty
-        userName = "",
-            $("#fname-error").show();
+        userName = enteredName,
+            NameLength = false;
+        $("#fname-error").show();
         $("#fname-error").text("Name should be at least 3 characters long.");
-    } else if (hasSpecialCharacter) {
+    }
+    else if (hasSpecialCharacter) {
         // Handle case when a special character is present     
         userName = "",
             $("#fname-error").show();
@@ -465,8 +470,23 @@ function nameHandler(event) {
         $("#fname-error").text("Invalid name format.");
     } else {
         // Valid name
+        NameLength = true;
         userName = enteredName,
             $("#fname-error").hide();
+    }
+
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        $("#submit").prop("disabled", true);
+    } else {
+        $("#submit").prop("disabled", false);
+    }
+    if (NameLength == false) {
+        $("#submit").prop("disabled", true);
+    } else {
+        $("#submit").prop("disabled", false);
+    }
+    if (userName == "") {
+        $("#fname-error").text("This field is required");
     }
 }
 function phoneHandler(event) {
@@ -517,6 +537,9 @@ function emailHandler(event) {
             return;
         }
         $("#email-error").hide();
+    }
+    if (enteredEmail == "") {
+        $("#email-error").text("This field is required");
     }
 
 }
