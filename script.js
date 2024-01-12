@@ -31,19 +31,9 @@ $(document).ready(function () {
     });
     $("#number").on('keyup', function (e) {
         phoneHandler(e);
-        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
-            $("#submit").prop("disabled", true);
-        } else {
-            $("#submit").prop("disabled", false);
-        }
     });
     $("#email").on('keyup', function (e) {
         emailHandler(e);
-        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
-            $("#submit").prop("disabled", true);
-        } else {
-            $("#submit").prop("disabled", false);
-        }
     });
     $("#storeDropdown").on('change', function (e) {
         if ($("#storeDropdown").val() != "null") {
@@ -347,7 +337,7 @@ function handleTimeSlotSelection(event, value) {
                 if (NameLength == false) {
                     $("#submit").prop("disabled", true);
                 } else {
-                    $("#submit").prop("disabled", false);
+                    // $("#submit").prop("disabled", false);
                 }
 
             } else {
@@ -483,7 +473,7 @@ function nameHandler(event) {
     if (NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {
-        $("#submit").prop("disabled", false);
+        // $("#submit").prop("disabled", false);
     }
     if (userName == "") {
         $("#fname-error").text("This field is required");
@@ -509,6 +499,14 @@ function phoneHandler(event) {
         // Valid phone
         phoneNo = enteredPhone,
             $("#phone-error").hide();
+    }
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        $("#submit").prop("disabled", true);
+    } else {
+        $("#submit").prop("disabled", false);
+    }
+    if (NameLength == false) {
+        $("#submit").prop("disabled", true);
     }
 
 }
@@ -540,6 +538,14 @@ function emailHandler(event) {
     }
     if (enteredEmail == "") {
         $("#email-error").text("This field is required");
+    }
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        $("#submit").prop("disabled", true);
+    } else {
+        $("#submit").prop("disabled", false);
+    }
+    if (NameLength == false) {
+        $("#submit").prop("disabled", true);
     }
 
 }
