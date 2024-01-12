@@ -317,6 +317,7 @@ function handleTimeSlotSelection(event, value) {
                 const newBooking = {
                     id: bookingID,
                     storeName,
+                    storeID,
                     accompanyingPeople: noOfAccompanyingPeople,
                     selectedDate: moment(selectedDateValue).format("DD-MM-YYYY"),
                     timeRange: `${storeStartTime} to ${storeEndTime}`,
@@ -415,9 +416,9 @@ function saveStoreDetailsForm() {
                             AppointmentStartTime: times[0],
                             AppointmentEndTime: times[1],
                             AppointmentDate: item.selectedDate,
-                            NoOfAccompanyingPeople: parseInt(noOfAccompanyingPeople),
+                            NoOfAccompanyingPeople: parseInt(item.accompanyingPeople),
                             BookingId: item.id,
-                            StoreID: storeID,
+                            StoreID: item.storeID,
                             RequestFrom: "User"
                         }),
                     };
