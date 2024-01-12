@@ -519,7 +519,7 @@ function emailHandler(event) {
         emailId = "";
         // alert("test")
         $("#email-error").show();
-        $("#email-error").text("Invalid email format.");
+        $("#email-error").text("Invalid email format");
     } else {
         // Valid email
         emailId = enteredEmail;
@@ -528,10 +528,10 @@ function emailHandler(event) {
             emailId = "",
                 this.setState({
                     // emailId: "",
-                    emailError: "Invalid email format .",
+                    emailError: "Invalid email format",
                 });
             $("#email-error").show();
-            $("#email-error").text("Invalid email format.");
+            $("#email-error").text("Invalid email format");
             return;
         }
         $("#email-error").hide();
