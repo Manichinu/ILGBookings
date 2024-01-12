@@ -3180,6 +3180,11 @@ td.selected-date {
     max-height: 190px;
     overflow-y: auto;
 }
-.fc-month-button{
+
+.fc-month-button {
     display: none !important;
+}
+
+#submit[disabled] {
+    opacity: 0.4;
 }

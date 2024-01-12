@@ -14,6 +14,7 @@ var appointmentDate;
 var userName;
 var phoneNo;
 var emailId;
+var Count = 0;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -288,7 +289,11 @@ function handleAccompanyingPeople(people) {
     if (people == 0) {
         noOfAccompanyingPeople = people;
         $("#accompanying_text").text("If you select 0,You are not permitted to have any guests with you.")
-    } else {
+    } else if (people == 1) {
+        noOfAccompanyingPeople = people;
+        $("#accompanying_text").text(`If you select ${people},You are permitted to have ${people} guest with you.`)
+    }
+    else {
         noOfAccompanyingPeople = people;
         $("#accompanying_text").text(`If you select ${people},You are permitted to have ${people} guests with you.`)
     }
@@ -313,7 +318,8 @@ function handleTimeSlotSelection(event, value) {
                 (booking) => booking.uniqueIdentifier === uniqueIdentifier
             );
             if (!isBookingExists) {
-                const bookingID = "BKNG-" + moment().format("DDMMYYYYHHmmss");
+                Count += 1
+                const bookingID = "BKNG-" + moment().format("DDMMYYYYHHmmss") + Count;
                 const newBooking = {
                     id: bookingID,
                     storeName,
