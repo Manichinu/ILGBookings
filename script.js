@@ -7,7 +7,7 @@ var StartDate;
 var OutOfOfficeTimeSlot = [];
 var noOfAccompanyingPeople;
 var bookings = [];
-var storeName;
+var storeName = "null";
 var storeID;
 var selectedDateValue;
 var appointmentDate;
@@ -26,12 +26,27 @@ $(document).ready(function () {
     });
     $("#name").on('keyup', function (e) {
         nameHandler(e);
+        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+            $("#submit").prop("disabled", true);
+        } else {
+            $("#submit").prop("disabled", false);
+        }
     });
     $("#number").on('keyup', function (e) {
         phoneHandler(e);
+        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+            $("#submit").prop("disabled", true);
+        } else {
+            $("#submit").prop("disabled", false);
+        }
     });
     $("#email").on('keyup', function (e) {
         emailHandler(e);
+        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+            $("#submit").prop("disabled", true);
+        } else {
+            $("#submit").prop("disabled", false);
+        }
     });
     $("#storeDropdown").on('change', function (e) {
         if ($("#storeDropdown").val() != "null") {
@@ -40,11 +55,17 @@ $(document).ready(function () {
             $("#no_slot").show();
             $("#store-error").show();
             $("#map_location").hide();
+            storeName = "null";
             EndDate = "";
             slotBookingStartTime = "";
             SlotBookingEndTime = "";
             SlotDuration = "";
             StartDate = "";
+        }
+        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+            $("#submit").prop("disabled", true);
+        } else {
+            $("#submit").prop("disabled", false);
         }
     });
     $('#calendar').fullCalendar({
@@ -67,13 +88,6 @@ $(document).ready(function () {
             }
         }
     });
-    // $('#calendar').on('click', '.fc-day', function () {
-    //     $('.fc-day').removeClass('fc-today');
-    //     $('.fc-day').removeClass('selected-date');
-    //     $(this).addClass('selected-date');
-    //     var selectedDate = $('#calendar').fullCalendar('getDate');
-    //     console.log('Selected Date: ' + selectedDate.format('YYYY-MM-DD'));
-    // });
 })
 function getStoreTypes() {
     var Items = {
@@ -322,6 +336,11 @@ function handleTimeSlotSelection(event, value) {
                     <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
                 </tr>`)
                 })
+                if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+                    $("#submit").prop("disabled", true);
+                } else {
+                    $("#submit").prop("disabled", false);
+                }
 
             } else {
                 console.log('Booking already exists for this time range.');
@@ -362,6 +381,11 @@ function removeHandler(bookingID) {
                 </tr>`)
     })
     console.log("this.bookingRemove", bookings);
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        $("#submit").prop("disabled", true);
+    } else {
+        $("#submit").prop("disabled", false);
+    }
 
 };
 function saveStoreDetailsForm() {
