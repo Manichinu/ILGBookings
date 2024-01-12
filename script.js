@@ -411,7 +411,7 @@ function saveStoreDetailsForm() {
                             Name: userName,
                             Email: emailId,
                             Number: parseInt(phoneNo),
-                            StoreName: storeName,
+                            StoreName: item.storeName,
                             AppointmentStartTime: times[0],
                             AppointmentEndTime: times[1],
                             AppointmentDate: item.selectedDate,
