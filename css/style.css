@@ -3186,5 +3186,11 @@ td.selected-date {
 }
 
 #submit[disabled] {
-    opacity: 0.4;
+    /* opacity: 0.4; */
+    background: rgb(0 0 0/30%) !important;
+}
+
+.manual-booking-table .table-responsive {
+    max-height: 360px;
+    overflow-y: auto;
 }
