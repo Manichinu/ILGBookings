@@ -494,30 +494,29 @@ function phoneHandler(event) {
 }
 function emailHandler(event) {
     const enteredEmail = event.target.value.trim();
-    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
 
-    // if (!enteredEmail.match(mailformat)) {
-    if (enteredEmail == "") {
+    if (!enteredEmail.match(mailformat)) {
         // Handle case when email doesn't match the regex
         emailId = "";
+        // alert("test")
         $("#email-error").show();
-        // $("#email-error").text("Invalid email format check.");
+        $("#email-error").text("Invalid email format.");
     } else {
         // Valid email
         emailId = enteredEmail;
-        $("#email-error").hide();
         // Check if the entered email matches the additional format
-        // if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,}$/)) {
-        //     emailId = "",
-        //         this.setState({
-        //             // emailId: "",
-        //             emailError: "Invalid email format .",
-        //         });
-        //     $("#email-error").show();
-        //     $("#email-error").text("Invalid email format.");
-        //     return;
-        // }
-        // $("#email-error").hide();
+        if (!enteredEmail.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
+            emailId = "",
+                this.setState({
+                    // emailId: "",
+                    emailError: "Invalid email format .",
+                });
+            $("#email-error").show();
+            $("#email-error").text("Invalid email format.");
+            return;
+        }
+        $("#email-error").hide();
     }
 
 }
