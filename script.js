@@ -93,7 +93,7 @@ function getStoreTypes() {
         }
         setTimeout(() => {
             $("#loader-Icon").css("display", "none");
-            $(".store-appoinment-page").css("display", "");
+            $(".appointment-book-form").css("display", "");
         }, 1000);
     });
 }

@@ -3227,3 +3227,18 @@ td.selected-date {
     background-repeat: no-repeat;
     z-index: 100000;
 }
+
+.appointment-book-form {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.bg-img {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}

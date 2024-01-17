@@ -16,132 +16,137 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 </head>
 
-<body style="background-image: url(img/bg-1.png);">
+<body>
     <div id="loader-Icon" class="loading-in-progress"></div>
-    <div class="store-appoinment-page" style="display: none;">
-        <div class="logo-sec">
-            <img src="./img/footer-logo_1.png">
-        </div>
-        <h2 class="form-title">Kindly, Fill out the Store Appointment Form</h2>
-        <div class="form-wrap">
-            <div class="input-sec">
-                <div class="row">
-                    <div class="col-md-6 required">
-                        <div class="form-group">
-                            <label for="usr" class="float-label">Name<span>*</span></label>
-                            <input type="text" placeholder="Enter Full Name" class="form-control" id="name" />
-                            <p class="err-msg" style="display: none;" id="fname-error">This field is required</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 required">
-                        <div class="form-group">
-                            <label for="usr" class="float-label">Phone No<span>*</span></label>
-                            <input type="text" placeholder="Enter Phone No" class="form-control" id="number" />
-                            <p class="err-msg" style="display: none;" id="phone-error">This field is required</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-6 required">
-                        <div class="form-group">
-                            <label for="usr" class="float-label">E-Mail<span>*</span></label>
-                            <input type="text" placeholder="Enter E-Mail" class="form-control" id="email" />
-                            <p class="err-msg" style="display: none;" id="email-error">This field is required</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 required">
-                        <div class="form-group">
-                            <label for="usr" class="float-label">Store<span>*</span></label>
-                            <select id="storeDropdown" class="form-control" onchange="storeNameHandler()">
-                                <option value="null" class="default_value">Select a Store</option>
-                            </select>
-                            <p class="err-msg" style="display: none;" id="store-error">This field is required</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row add-map" id="map_location" style="display: none;">
-                    <div class="col-md-12 location-map required"><label htmlFor="usr"
-                            class="location-label">Location<span>*</span></label>
-                        <div class="location-url"><a id="location" href="" data-interception='off' target='_blank'>Click
-                                here to see</a></div>
-                    </div>
-                </div>
+    <div class="appointment-book-form" style="display: none;">
+        <img src="img/bg-1.png" class="bg-img" />
+        <div class="store-appoinment-page">
+            <div class="logo-sec">
+                <img src="./img/footer-logo_1.png">
             </div>
-            <div class="booking-slot-wrap">
-                <h2>Booking Slot Time</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div id="calendar"></div>
+            <h2 class="form-title">Kindly, Fill out the Store Appointment Form</h2>
+            <div class="form-wrap">
+                <div class="input-sec">
+                    <div class="row">
+                        <div class="col-md-6 required">
+                            <div class="form-group">
+                                <label for="usr" class="float-label">Name<span>*</span></label>
+                                <input type="text" placeholder="Enter Full Name" class="form-control" id="name" />
+                                <p class="err-msg" style="display: none;" id="fname-error">This field is required</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 required">
+                            <div class="form-group">
+                                <label for="usr" class="float-label">Phone No<span>*</span></label>
+                                <input type="text" placeholder="Enter Phone No" class="form-control" id="number" />
+                                <p class="err-msg" style="display: none;" id="phone-error">This field is required</p>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="col-md-6 book-slot">
-                        <div class="accompanying-people">
-                            <div id="accompanying_people">
-                                <h4>No of Accompanying People</h4>
-                                <div class="people-slot">
-                                    <ul id="people_select">
-                                    </ul>
-                                    <p class="info-text"><img src="./img/info.svg" class="info-img"><span
-                                            id="accompanying_text">If you select 0,
-                                            You are not permitted to have any guests with you.</span></p>
+                    <div class="row">
+                        <div class="col-md-6 required">
+                            <div class="form-group">
+                                <label for="usr" class="float-label">E-Mail<span>*</span></label>
+                                <input type="text" placeholder="Enter E-Mail" class="form-control" id="email" />
+                                <p class="err-msg" style="display: none;" id="email-error">This field is required</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 required">
+                            <div class="form-group">
+                                <label for="usr" class="float-label">Store<span>*</span></label>
+                                <select id="storeDropdown" class="form-control" onchange="storeNameHandler()">
+                                    <option value="null" class="default_value">Select a Store</option>
+                                </select>
+                                <p class="err-msg" style="display: none;" id="store-error">This field is required</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row add-map" id="map_location" style="display: none;">
+                        <div class="col-md-12 location-map required"><label htmlFor="usr"
+                                class="location-label">Location<span>*</span></label>
+                            <div class="location-url"><a id="location" href="" data-interception='off'
+                                    target='_blank'>Click
+                                    here to see</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-slot-wrap">
+                    <h2>Booking Slot Time</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="calendar"></div>
+                        </div>
+                        <div class="col-md-6 book-slot">
+                            <div class="accompanying-people">
+                                <div id="accompanying_people">
+                                    <h4>No of Accompanying People</h4>
+                                    <div class="people-slot">
+                                        <ul id="people_select">
+                                        </ul>
+                                        <p class="info-text"><img src="./img/info.svg" class="info-img"><span
+                                                id="accompanying_text">If you select 0,
+                                                You are not permitted to have any guests with you.</span></p>
+                                    </div>
+                                </div>
+                                <div id="slot_times">
+                                    <h4>Select Slot Time</h4>
+                                    <div class="select-slot-time">
+                                        <p id="no_slot">No slot available</p>
+                                        <ul id="slots">
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="slot_times">
-                                <h4>Select Slot Time</h4>
-                                <div class="select-slot-time">
-                                    <p id="no_slot">No slot available</p>
-                                    <ul id="slots">
-                                    </ul>
+                            <div class="not-possible-to-choose">
+                                <div class="didnt-pic-mnth">
+                                    <p>
+                                        It is not possible for you to choose the slots for <span
+                                            id="select_date"></span>.
+                                        Please choose between
+                                        <span id="startdate"></span> and <span id="enddate"></span>.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="not-possible-to-choose">
-                            <div class="didnt-pic-mnth">
-                                <p>
-                                    It is not possible for you to choose the slots for <span id="select_date"></span>.
-                                    Please choose between
-                                    <span id="startdate"></span> and <span id="enddate"></span>.
-                                </p>
-                            </div>
-                        </div>
+
                     </div>
 
                 </div>
-
-            </div>
-            <div class="manual-booking-table">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Store</th>
-                                <th class="accompanying-qty">No of Accompanying people</th>
-                                <th>Date of Visit</th>
-                                <th>Slot Timing</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="booked_slots">
-                        </tbody>
-                    </table>
+                <div class="manual-booking-table">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Store</th>
+                                    <th class="accompanying-qty">No of Accompanying people</th>
+                                    <th>Date of Visit</th>
+                                    <th>Slot Timing</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booked_slots">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="req-btn">
-                <button class="btn-wrap" id="submit" disabled onclick="saveStoreDetailsForm()">Request
-                    Appointment</button>
-                <div id="StoreBookingURL" style="display: none;">
-                    <div id="schedule" class="overlay-1">
-                        <div class="popup_header_2 clearfix">
-                            <img src="./img/close-icon.svg" onclick="reqoff()" alt="close-icon" class="close-icon">
-                        </div>
-                        <div class="schedule-info-card copyurl">
-                            <div class="tq-req-msg">
-                                <img src="./img/tq-req.svg" class="req-img">
-                                <h3>Thank you!!!</h3>
-                                <h5>Your request for an appointment has been received.</h5>
-                                <p>We will get back to you on the Registered
-                                    E-mail.</p>
+                <div class="req-btn">
+                    <button class="btn-wrap" id="submit" disabled onclick="saveStoreDetailsForm()">Request
+                        Appointment</button>
+                    <div id="StoreBookingURL" style="display: none;">
+                        <div id="schedule" class="overlay-1">
+                            <div class="popup_header_2 clearfix">
+                                <img src="./img/close-icon.svg" onclick="reqoff()" alt="close-icon" class="close-icon">
+                            </div>
+                            <div class="schedule-info-card copyurl">
+                                <div class="tq-req-msg">
+                                    <img src="./img/tq-req.svg" class="req-img">
+                                    <h3>Thank you!!!</h3>
+                                    <h5>Your request for an appointment has been received.</h5>
+                                    <p>We will get back to you on the Registered
+                                        E-mail.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
