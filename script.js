@@ -91,6 +91,10 @@ function getStoreTypes() {
         for (var i = 0; i < response.length; i++) {
             $("#storeDropdown").append(`<option key=${response[i].StoreId} value=${response[i].Title} data-storeid=${response[i].StoreId}>${response[i].Title}</option>`)
         }
+        setTimeout(() => {
+            $("#loader-Icon").css("display", "none");
+            $(".store-appoinment-page").css("display", "");
+        }, 1000);
     });
 }
 function storeNameHandler() {

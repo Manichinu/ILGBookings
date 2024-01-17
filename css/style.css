@@ -3201,3 +3201,29 @@ td.selected-date {
     max-height: 360px;
     overflow-y: auto;
 }
+
+.loading-in-progress::before {
+    /* background cover */
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #f1f2f4;
+    z-index: 100000;
+}
+
+.loading-in-progress::after {
+    /* spinner */
+    content: '';
+    position: fixed;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background-image: url(../img/loader.gif);
+    background-repeat: no-repeat;
+    z-index: 100000;
+}
