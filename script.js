@@ -210,6 +210,12 @@ function handleNavigate(newDate) {
     bookings.map((item) => {
         $("li[key='" + item.timeRange + "']").addClass('select');
     })
+
+    if (timeSlots.length == 0) {
+        $("#no_slot").show();
+    } else {
+        $("#no_slot").hide();
+    }
 }
 function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
     const timeSlots = [];
