@@ -91,6 +91,9 @@ function getStoreTypes() {
         for (var i = 0; i < response.length; i++) {
             $("#storeDropdown").append(`<option key=${response[i].StoreId} value=${response[i].Title} data-storeid=${response[i].StoreId}>${response[i].Title}</option>`)
         }
+        if (response.length == 0) {
+            $(".default_value").text("No Store Available")
+        }
         setTimeout(() => {
             $("#loader-Icon").css("display", "none");
             $(".appointment-book-form").css("display", "");
