@@ -11,6 +11,7 @@ var userName;
 var phoneNo;
 var emailId;
 var NameLength;
+var NoofAttendees = 2;
 
 
 
@@ -60,6 +61,7 @@ function getEventsMaster() {
                 $("#start_date").text(moment(response[i].StartDate, "DD-MM-YYYY").format("DD"));
                 $("#end_month").text(moment(response[i].EndDate, "DD-MM-YYYY").format("MMM"));
                 $("#end_date").text(moment(response[i].EndDate, "DD-MM-YYYY").format("DD"));
+                // NoofAttendees = response[i].MaxNoofAttendees;
                 StartDate = response[i].StartDate;
                 EndDate = response[i].EndDate;
                 slotBookingStartTime = response[i].SlotStartTime;
@@ -68,6 +70,11 @@ function getEventsMaster() {
                 setTimeSlots();
             }
         }
+        getEventBookingTransaction();
+        setTimeout(() => {
+            $("#loader-Icon").css("display", "none");
+            $(".appointment-book-form").css("display", "");
+        }, 1000);
     });
 }
 function setTimeSlots() {
@@ -89,7 +96,6 @@ function setTimeSlots() {
 function generateTimeSlotsArray(startTime, endTime, slotDuration, startDate, endDate) {
     const timeSlots = [];
     var Start = moment(startDate, "DD-MM-YYYY").format("YYYY-MM-DD");
-    var End = moment(endDate, "DD-MM-YYYY").format("YYYY-MM-DD");
     let currentTime = new Date(`${Start}T${startTime}`);//2023-01-01
     const endTimeObj = new Date(`${Start}T${endTime}`);
     while (currentTime < endTimeObj) {
@@ -338,4 +344,39 @@ function saveEventDetails() {
     } catch (error) {
         console.error(error);
     }
+}
+function getEventBookingTransaction() {
+    var Items = {
+        "url": "https://prod-20.uaecentral.logic.azure.com:443/workflows/320466af42e042029867ca345d9b99a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Cis8LzDqIQBXoXHuqpbj_gQHeIaGkmBm2hfNLheuyV8",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json;odata=verbose",
+            "Access-Control-Allow-Origin": "*"
+        },
+    };
+    $.ajax(Items).done(function (response) {
+        // Group the inventory by 'date'
+        const groupedByDateTime = response.reduce((result, item) => {
+            const key = `${item.AppointmentDate}_${item.AppointmentStartTime}_${item.AppointmentEndTime}`;
+            (result[key] = result[key] || []).push(item);
+            return result;
+        }, {});
+        console.log("Groups", groupedByDateTime)
+        // Iterate through the grouped items and log each name
+        Object.values(groupedByDateTime).forEach(items => {
+            var ApprovedCount = 0;
+            items.map(val => {
+                if (val.Status == "Approved") {
+                    ApprovedCount += 1;
+                }
+            });
+            if (ApprovedCount >= NoofAttendees) {
+                var Date = moment(items[0].AppointmentDate, "DD-MM-YYYY").format("YYYY-MM-DD");
+                var Key = `${Date} | ${items[0].AppointmentStartTime} to ${items[0].AppointmentEndTime}`
+                $('li[key="' + Key + '"]').addClass('closed');
+                $('li[key="' + Key + '"]').removeAttr('onclick');
+            }
+        });
+    });
 }
