@@ -107,7 +107,7 @@ function getStoreTypes() {
 function storeNameHandler() {
     storeName = $("#storeDropdown option:selected").text();
     console.log("storeName", storeName);
-    storeID = storeName;
+    storeID = "STORE-" + moment().format("DDMMYYYYHHmmss");
     console.log("storeID", storeID);
     $("#slots").empty();
     var Items = {
@@ -312,6 +312,11 @@ function handleTimeSlotSelection(event, value) {
             console.log("timeString2", timeString);
             const storeStartTime = timeArray[0].trim();
             const storeEndTime = timeArray[1].trim();
+            var Start = storeStartTime.split("|");
+            var startTime = Start[1].substring(0, 6);
+            var endTime = storeEndTime.substring(0, 6);
+
+            console.log("Result:", endTime);
 
             // Use a unique identifier based on the time range
             const uniqueIdentifier = `${storeStartTime} to ${storeEndTime}`;
@@ -331,6 +336,8 @@ function handleTimeSlotSelection(event, value) {
                     selectedDate: moment(selectedDateValue).format("DD-MM-YYYY"),
                     timeRange: `${storeStartTime} to ${storeEndTime}`,
                     uniqueIdentifier,
+                    startTime,
+                    endTime
                 };
                 console.log("newBooking", newBooking);
                 // Update the state with the new booking
@@ -351,7 +358,7 @@ function handleTimeSlotSelection(event, value) {
                 } else {
                     $("#submit").prop("disabled", false);
                 }
-              
+
             } else {
                 console.log('Booking already exists for this time range.');
             }
@@ -422,13 +429,14 @@ function saveStoreDetailsForm() {
                             Email: emailId,
                             Number: parseInt(phoneNo),
                             StoreName: item.storeName,
-                            AppointmentStartTime: times[0],
-                            AppointmentEndTime: times[1],
-                            AppointmentDate: item.selectedDate,
+                            AppointmentStartTime: item.startTime,
+                            AppointmentEndTime: item.endTime,
+                            AppointmentDate: moment(item.selectedDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
                             NoOfAccompanyingPeople: parseInt(item.accompanyingPeople),
                             BookingId: item.id,
-                            StoreID: item.storeID,
-                            RequestFrom: "User"
+                            StoreID: storeID,
+                            RequestFrom: "User",
+                            Map: $("#location").attr("href")
                         }),
                     };
 
@@ -482,7 +490,7 @@ function nameHandler(event) {
     } else {
         $("#submit").prop("disabled", false);
     }
-  
+
     if (userName == "") {
         $("#fname-error").text("This field is required");
     }
@@ -513,7 +521,7 @@ function phoneHandler(event) {
     } else {
         $("#submit").prop("disabled", false);
     }
-   
+
 }
 function emailHandler(event) {
     const enteredEmail = event.target.value.trim();
@@ -549,7 +557,7 @@ function emailHandler(event) {
     } else {
         $("#submit").prop("disabled", false);
     }
-   
+
 }
 function formValidation() {
     var FormStatus = true;
