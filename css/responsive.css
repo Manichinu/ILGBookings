@@ -1,0 +1,91 @@
+@media only screen and (max-width: 768px) {
+    .bg-img {
+        position: fixed;
+
+    }
+
+    .appointment-book-form .form-wrap .row .col-md-6 {
+        margin-bottom: 30px;
+    }
+
+    .appointment-book-form .form-wrap .row {
+        margin-bottom: 0;
+    }
+
+    .accompanying-people {
+        padding: 20px;
+    }
+
+    .booking-slot-wrap ul li:nth-child(even) {
+        margin-right: 0;
+    }
+
+    .booking-slot-wrap ul li {
+        width: 47%;
+    }
+
+    .booking-slot-wrap .col-md-6 {
+        margin-bottom: 0 !important;
+    }
+
+    .booking-slot-wrap h4 {
+        line-height: 24px;
+    }
+
+    .store-appoinment-page .select-slot-time ul {
+        padding-right: 10px;
+    }
+
+    .book-slot .select-slot-time li {
+        width: 49%;
+    }
+
+    .store-appoinment-page .select-slot-time ul {
+        max-height: 230px;
+    }
+
+    #slots {
+        padding-right: 0;
+    }
+
+    #map_location {
+        margin-top: 0;
+    }
+
+    .form-wrap .req-btn #StoreBookingURL #schedule {
+        width: 300px;
+    }
+
+    .fc-scroller {
+        height: auto !important;
+    }
+
+    #no_slot {
+        text-align: center;
+        margin-top: 45px;
+        /* margin: 20px; */
+    }
+}
+
+
+
+@media only screen and (max-width: 767px) {
+    .appointment-book-form .form-wrap {
+        width: 90%;
+    }
+
+    .version-update {
+        margin-top: 50px;
+    }
+
+    .version-update p {
+        text-align: center !important;
+        padding: 10px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .appointment-book-form .form-wrap {
+        width: 90%;
+    }
+}
