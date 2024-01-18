@@ -3242,3 +3242,24 @@ td.selected-date {
     height: 100%;
     z-index: -1;
 }
+
+/* .mid-date {
+    background: #fff !important;
+    border: 1px solid transparent !Important;
+    margin-top: 0px;
+    padding: 5.5px 15px !important;
+}
+
+.date-picker {
+    margin-right: 45px;
+}
+
+.date-picker:first-child {
+    margin-left: 0px;
+    margin-right: 45px;
+}
+
+.date-picker:last-child {
+    margin-left: 0px;
+    margin-right: 0;
+} */

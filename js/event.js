@@ -67,18 +67,45 @@ function getEventsMaster() {
                 slotBookingStartTime = response[i].SlotStartTime;
                 SlotBookingEndTime = response[i].SlotEndTime;
                 SlotDuration = response[i].SlotDurationTime;
-                setTimeSlots();
             }
         }
-        getEventBookingTransaction();
+
+        // Parse the date strings to create Date objects
+        var startDateParts = StartDate.split('-');
+        var endDateParts = EndDate.split('-');
+
+        var startDate = new Date(startDateParts[2], startDateParts[1] - 1, startDateParts[0]);
+        var endDate = new Date(endDateParts[2], endDateParts[1] - 1, endDateParts[0]);
+        // Array to store the dates in between
+        var datesInRange = [];
+        // Iterate through the dates and add them to the array
+        for (var currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
+            datesInRange.push(new Date(currentDate));
+        }
+        // Convert the dates to string format if needed
+        var datesInRangeStrings = datesInRange.map((date, index) => {
+            var Date = date.toLocaleDateString();
+            var Month = moment(Date, "MM/DD/YYYY").format("MMM");
+            var Day = moment(Date, "MM/DD/YYYY").format("DD");
+            $("#inbetween_dates").append(`<div class="date-picker f-left" id="date-${index}" onclick="setTimeSlots('${Date}')">
+            <p class="mnth-name">${Month}</p>
+            <h3 class="date-no">${Day}</h3>
+        </div>`)
+        });
+        $(".date-picker").on('click', function () {
+            $(".date-picker").removeClass('active');
+            $(this).addClass('active');
+        })
+        $("#date-0").trigger('click');
+        console.log("Dates in Between:", datesInRangeStrings);
         setTimeout(() => {
             $("#loader-Icon").css("display", "none");
             $(".appointment-book-form").css("display", "");
         }, 1000);
     });
 }
-function setTimeSlots() {
-    const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, StartDate, EndDate);
+function setTimeSlots(date) {
+    const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, date);
     console.log("Timeslots array : " + generatedTimeSlots);
     timeSlots = [];
     timeSlots = generatedTimeSlots;
@@ -92,10 +119,15 @@ function setTimeSlots() {
              ${item}
              </li>`)
     })
+    getEventBookingTransaction();
+    bookings.map((item) => {
+        var Date = moment(item.selectedDate, "DD-MM-YYYY").format("YYYY-MM-DD")
+        $(`li[key='${Date} | ${item.startTime} to ${item.endTime}']`).addClass('select');
+    })
 }
-function generateTimeSlotsArray(startTime, endTime, slotDuration, startDate, endDate) {
+function generateTimeSlotsArray(startTime, endTime, slotDuration, startDate) {
     const timeSlots = [];
-    var Start = moment(startDate, "DD-MM-YYYY").format("YYYY-MM-DD");
+    var Start = moment(startDate, "MM/DD/YYYY").format("YYYY-MM-DD");
     let currentTime = new Date(`${Start}T${startTime}`);//2023-01-01
     const endTimeObj = new Date(`${Start}T${endTime}`);
     while (currentTime < endTimeObj) {
