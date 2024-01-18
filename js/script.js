@@ -49,7 +49,7 @@ $(document).ready(function () {
             SlotDuration = "";
             StartDate = "";
         }
-        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+        if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
             $("#submit").prop("disabled", true);
         } else {
             $("#submit").prop("disabled", false);
@@ -75,6 +75,10 @@ $(document).ready(function () {
             }
         }
     });
+    var buttonText = $('.fc-today-button').text();
+    // Capitalize the first letter
+    var capitalizedText = buttonText.charAt(0).toUpperCase() + buttonText.slice(1);
+    $('.fc-today-button').text(capitalizedText);
 })
 function getStoreTypes() {
     var Items = {
@@ -342,17 +346,12 @@ function handleTimeSlotSelection(event, value) {
                     <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
                 </tr>`)
                 })
-                if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+                if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
                     $("#submit").prop("disabled", true);
                 } else {
                     $("#submit").prop("disabled", false);
                 }
-                if (NameLength == false) {
-                    $("#submit").prop("disabled", true);
-                } else {
-                    // $("#submit").prop("disabled", false);
-                }
-
+              
             } else {
                 console.log('Booking already exists for this time range.');
             }
@@ -392,7 +391,7 @@ function removeHandler(bookingID) {
                 </tr>`)
     })
     console.log("this.bookingRemove", bookings);
-    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {
         $("#submit").prop("disabled", false);
@@ -478,16 +477,12 @@ function nameHandler(event) {
             $("#fname-error").hide();
     }
 
-    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {
         $("#submit").prop("disabled", false);
     }
-    if (NameLength == false) {
-        $("#submit").prop("disabled", true);
-    } else {
-        // $("#submit").prop("disabled", false);
-    }
+  
     if (userName == "") {
         $("#fname-error").text("This field is required");
     }
@@ -513,15 +508,12 @@ function phoneHandler(event) {
         phoneNo = enteredPhone,
             $("#phone-error").hide();
     }
-    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {
         $("#submit").prop("disabled", false);
     }
-    if (NameLength == false) {
-        $("#submit").prop("disabled", true);
-    }
-
+   
 }
 function emailHandler(event) {
     const enteredEmail = event.target.value.trim();
@@ -552,15 +544,12 @@ function emailHandler(event) {
     if (enteredEmail == "") {
         $("#email-error").text("This field is required");
     }
-    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0) {
+    if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {
         $("#submit").prop("disabled", false);
     }
-    if (NameLength == false) {
-        $("#submit").prop("disabled", true);
-    }
-
+   
 }
 function formValidation() {
     var FormStatus = true;
