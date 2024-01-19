@@ -107,8 +107,6 @@ function getStoreTypes() {
 function storeNameHandler() {
     storeName = $("#storeDropdown option:selected").text();
     console.log("storeName", storeName);
-    storeID = "STORE-" + moment().format("DDMMYYYYHHmmss");
-    console.log("storeID", storeID);
     $("#slots").empty();
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
@@ -129,6 +127,7 @@ function storeNameHandler() {
                 SlotBookingEndTime = response[i].SlotBookingEndTime;
                 SlotDuration = response[i].SlotDuration;
                 StartDate = response[i].StartDate;
+                storeID = response[i].StoreId;
                 $("#startdate").text(moment(StartDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#enddate").text(moment(EndDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#location").attr("href", response[i].MapLocation)
