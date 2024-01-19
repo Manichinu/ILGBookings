@@ -11,7 +11,7 @@ var userName;
 var phoneNo;
 var emailId;
 var NameLength;
-var NoofAttendees = 2;
+var NoofAttendees;
 
 
 
@@ -61,7 +61,7 @@ function getEventsMaster() {
                 $("#start_date").text(moment(response[i].StartDate, "DD-MM-YYYY").format("DD"));
                 $("#end_month").text(moment(response[i].EndDate, "DD-MM-YYYY").format("MMM"));
                 $("#end_date").text(moment(response[i].EndDate, "DD-MM-YYYY").format("DD"));
-                // NoofAttendees = response[i].MaxNoofAttendees;
+                NoofAttendees = response[i].MaxNoofAttendees;
                 StartDate = response[i].StartDate;
                 EndDate = response[i].EndDate;
                 slotBookingStartTime = response[i].SlotStartTime;
@@ -365,7 +365,8 @@ function saveEventDetails() {
                     AppointmentEndTime: item.endTime,
                     AppointmentDate: item.selectedDate,
                     EventID: item.id,
-                    RequestFrom: "User"
+                    RequestFrom: "User",
+                    Map: $("#location").attr('href')
                 }),
             };
 
