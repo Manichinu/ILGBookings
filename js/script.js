@@ -229,11 +229,11 @@ function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
     let currentTime = new Date(`${date}T${startTime}`);//2023-01-01
     const endTimeObj = new Date(`${date}T${endTime}`);
     while (currentTime < endTimeObj) {
-        const startTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const startTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         // Add fractional part of the slotDuration to minutes
         const minutesToAdd = Math.floor(slotDuration) * 60 + Math.round((slotDuration % 1) * 60);
         currentTime.setMinutes(currentTime.getMinutes() + minutesToAdd);
-        const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         timeSlots.push(`${date} | ${startTimeString} to ${endTimeString}`);
     }
     console.log("timeSlots", timeSlots);
