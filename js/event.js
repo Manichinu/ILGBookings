@@ -69,15 +69,15 @@ function getEventsMaster() {
                 SlotDuration = response[i].SlotDurationTime;
             }
         }
-
         // Parse the date strings to create Date objects
         var startDateParts = StartDate.split('-');
         var endDateParts = EndDate.split('-');
-
         var startDate = new Date(startDateParts[2], startDateParts[1] - 1, startDateParts[0]);
         var endDate = new Date(endDateParts[2], endDateParts[1] - 1, endDateParts[0]);
+
         // Array to store the dates in between
         var datesInRange = [];
+
         // Iterate through the dates and add them to the array
         for (var currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
             datesInRange.push(new Date(currentDate));
@@ -98,10 +98,23 @@ function getEventsMaster() {
         })
         $("#date-0").trigger('click');
         console.log("Dates in Between:", datesInRangeStrings);
-        setTimeout(() => {
-            $("#loader-Icon").css("display", "none");
-            $(".appointment-book-form").css("display", "");
-        }, 1000);
+
+        // check EndDate is Expired or not       
+        if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
+            console.log("Expired")
+            setTimeout(() => {
+                $("#loader-Icon").css("display", "none");
+                $("#event_expired").show();
+                $(".version-update").hide();
+                $(".appointment-book-form").empty();
+            }, 500);
+        } else {
+            console.log("Not Expired")
+            setTimeout(() => {
+                $("#loader-Icon").css("display", "none");
+                $(".appointment-book-form").css("display", "");
+            }, 500);
+        }
     });
 }
 function setTimeSlots(date) {
@@ -400,7 +413,7 @@ function getEventBookingTransaction() {
         Object.values(groupedByDateTime).forEach(items => {
             var ApprovedCount = 0;
             items.map(val => {
-                if (val.Status == "Approved") {
+                if (val.Status.Value == "Approved") {
                     ApprovedCount += 1;
                 }
             });
