@@ -72,6 +72,9 @@ $(document).ready(function () {
                 $("#select_date").text(Date)
                 handleNavigate(Date);
                 console.log('Selected Date: ' + date.format());
+                var Month = moment(Date, "YYYY-MM-DD").format("MMMM YYYY");
+                $(".fc-center h2").text(Month);
+                console.log("Month", Month)
             }
         }
     });
