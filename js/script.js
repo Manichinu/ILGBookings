@@ -472,13 +472,15 @@ function nameHandler(event) {
     }
     else if (hasSpecialCharacter) {
         // Handle case when a special character is present     
-        userName = "",
-            $("#fname-error").show();
-        $("#fname-error").text("Name should not contain special characters.");
+        userName = enteredName,
+            NameLength = false;
+        $("#fname-error").show();
+        $("#fname-error").text("Invalid name format.");
     } else if (!enteredName.match(fnameregex)) {
         // Handle case when the name doesn't match the regex 
-        userName = "",
-            $("#fname-error").show();
+        userName = enteredName,
+            NameLength = false;
+        $("#fname-error").show();
         $("#fname-error").text("Invalid name format.");
     } else {
         // Valid name
