@@ -195,14 +195,29 @@ function handleNavigate(newDate) {
         }, 100)
     }
 
+    if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
+        $("#accompanying_people").hide()
+        $("#slot_times").hide()
+        $(".not-possible-to-choose").addClass("show");
+        $("#slots").empty();
+        $("#past").show();
+        return;
+    } else {
+        $("#past").hide();
+        $("#accompanying_people").show()
+        $("#slot_times").show()
+        $(".not-possible-to-choose").removeClass("show");
+    }
+
     if (moment(date, "YYYY-MM-DD").isAfter(moment(EndDate, "DD-MM-YYYY"))) {
         $("#accompanying_people").hide()
         $("#slot_times").hide()
         $(".not-possible-to-choose").addClass("show");
         $("#slots").empty();
-        $("#no_slot").show();
+        $("#future").show();
+        return;
     } else {
-        $("#no_slot").hide();
+        $("#future").hide();
         $("#accompanying_people").show()
         $("#slot_times").show()
         $(".not-possible-to-choose").removeClass("show");
