@@ -2896,7 +2896,7 @@ body {
     border: 1px solid #818181;
     color: #818181;
     padding: 10px 5px;
-    width: 19%;
+    width: 25%;
     display: inline-block;
     border-radius: 2px;
     margin-right: 0;
@@ -2908,6 +2908,7 @@ body {
 
 .event-appoinment-form .book-slot {
     margin: 0 20px;
+    margin-top: 25px;
 }
 
 .not-enable {
@@ -2936,18 +2937,21 @@ body {
 }
 
 .date-pic {
-    width: 20%;
+    width: fit-content;
     background: linear-gradient(90deg, rgba(82, 227, 195, 0.39) 0%, rgba(250, 103, 122, 0.39) 92.19%);
 
 }
 
 .date-picker.f-left {
-    background: #FFD4CA;
-    padding: 5px 15px;
-    border-top: 2px solid #52E3C3;
+    background: #fff;
+    padding: 5px 15px 7px 15px;
+    /* border-top: 0px solid #52E3C3; */
+    border-top: 2px solid transparent;
     cursor: pointer;
     box-shadow: 0px 0px 2px 0px #00000040;
+    margin-left: 30px;
 }
+
 
 .date-picker.f-right {
     background: #FFFFFF;
@@ -3263,3 +3267,73 @@ td.selected-date {
     margin-left: 0px;
     margin-right: 0;
 } */
+/* .date-picker.f-left:first-child{
+    margin-left:0 !important;
+}
+.date-picker.f-left.active {
+    background: #FFD4CA;
+    padding: 5px 15px 7px 15px;
+    border-top: 2px solid #52E3C3;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px 0px #00000040;
+    margin-left: 30px;
+}
+.date-picker.f-left:first-child{
+    background: #FFD4CA;
+    padding: 5px 15px;
+    border-top: 2px solid #52E3C3;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px 0px #00000040;
+    margin-left:30px;
+}
+.date-picker.f-left:last-child{
+    border-top: 2px solid #FA677A;
+}
+.form-control[readonly]{
+    background-color: #fff !important;
+    opacity: 1;
+    cursor: no-drop;
+} */
+.date-picker.f-left:first-child {
+    margin-left: 0 !important;
+    border-top: 2px solid #52E3C3;
+}
+
+.date-picker.f-left.active {
+    background: #FFD4CA;
+    padding: 5px 15px 7px 15px;
+    border-top: 0px solid #52E3C3;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px 0px #00000040;
+    margin-left: 30px;
+}
+
+.date-picker.f-left:last-child {
+    border-top: 2px solid #FA677A;
+}
+
+.form-control[readonly] {
+    background-color: #fff !important;
+    opacity: 1;
+    cursor: no-drop;
+}
+
+.events-completed-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.events-completed-wrap img {
+    width: 300px;
+}
+
+.events-completed-wrap p {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #F79E88;
+    margin-left: -31px;
+    font-family: medium;
+}
