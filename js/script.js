@@ -16,6 +16,8 @@ var phoneNo;
 var emailId;
 var Count = 0;
 var NameLength;
+var clickedMonth;
+
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -57,7 +59,7 @@ $(document).ready(function () {
     });
     $('#calendar').fullCalendar({
         header: {
-            left: 'next today',
+            left: 'prev,next today',
             center: 'title',
             right: 'month'
         },
@@ -66,15 +68,15 @@ $(document).ready(function () {
         dayClick: function (date, jsEvent, view) {
             var Date = date.format();
             selectedDateValue = Date;
+            clickedMonth = moment(Date, "YYYY-MM-DD").format("MMMM YYYY");
             if (moment(Date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
                 return;
             } else {
                 $("#select_date").text(Date)
                 handleNavigate(Date);
                 console.log('Selected Date: ' + date.format());
-                var Month = moment(Date, "YYYY-MM-DD").format("MMMM YYYY");
-                $(".fc-center h2").text(Month);
-                console.log("Month", Month)
+                $(".fc-center h2").text(clickedMonth);
+                console.log("Month", clickedMonth)
             }
         }
     });
@@ -82,6 +84,31 @@ $(document).ready(function () {
     // Capitalize the first letter
     var capitalizedText = buttonText.charAt(0).toUpperCase() + buttonText.slice(1);
     $('.fc-today-button').text(capitalizedText);
+
+    $(".fc-next-button").on('click', function () {
+        var currentMonth = moment().format("MMMM YYYY");
+        if ($(".fc-center h2").text() == currentMonth) {
+            $(".fc-prev-button").hide();
+        } else {
+            $(".fc-prev-button").show();
+        }
+    })
+    $(".fc-prev-button").on('click', function () {
+        var currentMonth = moment().format("MMMM YYYY");
+        if ($(".fc-center h2").text() == currentMonth) {
+            $(".fc-prev-button").hide();
+        } else {
+            $(".fc-prev-button").show();
+        }
+    })
+    $(".fc-today-button").on('click', function () {
+        var currentMonth = moment().format("MMMM YYYY");
+        if ($(".fc-center h2").text() == currentMonth) {
+            $(".fc-prev-button").hide();
+        } else {
+            $(".fc-prev-button").show();
+        }
+    })
 })
 function getStoreTypes() {
     var Items = {
@@ -231,11 +258,11 @@ function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
     let currentTime = new Date(`${date}T${startTime}`);//2023-01-01
     const endTimeObj = new Date(`${date}T${endTime}`);
     while (currentTime < endTimeObj) {
-        const startTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const startTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         // Add fractional part of the slotDuration to minutes
         const minutesToAdd = Math.floor(slotDuration) * 60 + Math.round((slotDuration % 1) * 60);
         currentTime.setMinutes(currentTime.getMinutes() + minutesToAdd);
-        const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         timeSlots.push(`${date} | ${startTimeString} to ${endTimeString}`);
     }
     console.log("timeSlots", timeSlots);
@@ -315,10 +342,12 @@ function handleTimeSlotSelection(event, value) {
             const storeStartTime = timeArray[0].trim();
             const storeEndTime = timeArray[1].trim();
             var Start = storeStartTime.split("|");
-            var startTime = Start[1].substring(0, 6);
-            var endTime = storeEndTime.substring(0, 6);
-
-            console.log("Result:", endTime);
+            // var startTime = Start[1].substring(0, 6);
+            // var endTime = storeEndTime.substring(0, 6);
+            var startTime = Start[1];
+            startTime = convertTo24HourFormat(startTime);
+            var endTime = convertTo24HourFormat(storeEndTime);
+            console.log("Result:", startTime, endTime);
 
             // Use a unique identifier based on the time range
             const uniqueIdentifier = `${storeStartTime} to ${storeEndTime}`;
@@ -370,6 +399,19 @@ function handleTimeSlotSelection(event, value) {
     } else {
         FireSwalalert("error", "Please select the No of Accompanying People Field  !");
     }
+}
+function convertTo24HourFormat(timeString) {
+    // Parse the input time string into a Date object
+    const parsedDate = new Date("2000-01-01 " + timeString);
+
+    // Extract hours and minutes
+    const hours = parsedDate.getHours();
+    const minutes = parsedDate.getMinutes();
+
+    // Format hours and minutes as "HH:mm"
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+    return formattedTime;
 }
 function removeHandler(bookingID) {
     // Find the booking with the specified ID

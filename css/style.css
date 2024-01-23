@@ -3337,3 +3337,7 @@ td.selected-date {
     margin-left: -31px;
     font-family: medium;
 }
+
+.fc-prev-button {
+    display: none;
+}
