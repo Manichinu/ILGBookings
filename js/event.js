@@ -379,9 +379,11 @@ function saveEventDetails() {
                     AppointmentStartTime: item.startTime,
                     AppointmentEndTime: item.endTime,
                     AppointmentDate: item.selectedDate,
-                    EventID: item.id,
+                    EventID: EventID,
                     RequestFrom: "User",
-                    Map: $("#location").attr('href')
+                    Map: $("#location").attr('href'),
+                    UserID: `UEID-${moment().format("DDMMYYYYHHmmssSSS")}-${key}`,
+                    QRCodeText: generateRandomAlphaNumeric()
                 }),
             };
 
@@ -427,4 +429,16 @@ function getEventBookingTransaction() {
             }
         });
     });
+}
+function generateRandomAlphaNumeric() {
+    const length = 8;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
 }
