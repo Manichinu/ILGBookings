@@ -236,8 +236,12 @@ function handleNavigate(newDate) {
         timeSlots = generatedTimeSlots;
         $("#slots").empty();
         timeSlots.map((item, key) => {
-            const timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.map(slot => slot.replace(/\s+/g, ''));
+            const timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.Name == storeName).map(slot =>
+                slot.Time.replace(/\s+/g, '')
+            );
+            console.log(timeSlotsWithoutSpaces)
             const normalizedItem = item.replace(/\s+/g, '')
+            console.log(normalizedItem)
             const isDisabled = timeSlotsWithoutSpaces.indexOf(normalizedItem) !== -1;
             if (isDisabled) {
                 $("#slots").append(`
@@ -312,7 +316,7 @@ function GetOutOfOfficeDetails() {
         console.log("StoreTypes", response)
         OutOfOfficeTimeSlot = [];
         for (var i = 0; i < response.length; i++) {
-            OutOfOfficeTimeSlot.push(`${response[i].SelectedDate} | ${response[i].SlotStartTime} to ${response[i].SlotEndTime}`)
+            OutOfOfficeTimeSlot.push({ Name: response[i].Title, Time: `${response[i].SelectedDate} | ${response[i].SlotStartTime} to ${response[i].SlotEndTime}` })
         }
         console.log("OutOfOfficeTimeSlot", OutOfOfficeTimeSlot);
     });
