@@ -17,7 +17,7 @@ var emailId;
 var Count = 0;
 var NameLength;
 var clickedMonth;
-
+var isDayClickEnabled = true;
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -66,6 +66,9 @@ $(document).ready(function () {
         defaultDate: new Date(),
         editable: false,
         dayClick: function (date, jsEvent, view) {
+            if (!isDayClickEnabled) {
+                return;
+            }
             var Date = date.format();
             selectedDateValue = Date;
             clickedMonth = moment(Date, "YYYY-MM-DD").format("MMMM YYYY");
@@ -188,9 +191,9 @@ function handleNavigate(newDate) {
         $("#accompanying_people").show();
         $("#no_slot").hide();
         $('td').removeClass('fc-today');
-        $('td').removeClass('selected-date');
+        $('.fc-day-top').removeClass('selected-date');
         setTimeout(() => {
-            $('td[data-date="' + selectedDateValue + '"]').addClass('selected-date');
+            $('td[data-date="' + date + '"]').addClass('selected-date');
             // $(jsEvent.target).addClass('selected-date');
         }, 100)
     }
@@ -201,12 +204,16 @@ function handleNavigate(newDate) {
         $(".not-possible-to-choose").addClass("show");
         $("#slots").empty();
         $("#past").show();
+        isDayClickEnabled = false;
+        $(".fc-day-top").css("pointer-events", "none");
         return;
     } else {
         $("#past").hide();
         $("#accompanying_people").show()
         $("#slot_times").show()
         $(".not-possible-to-choose").removeClass("show");
+        isDayClickEnabled = true;
+        $(".fc-day-top").css("pointer-events", "");
     }
 
     if (moment(date, "YYYY-MM-DD").isAfter(moment(EndDate, "DD-MM-YYYY"))) {
