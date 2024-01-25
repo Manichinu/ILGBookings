@@ -77,11 +77,29 @@ $(document).ready(function () {
             if (moment(Date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
                 return;
             } else {
+                if ($("#storeDropdown").val() == "null") {
+                    FireSwalalert("warning", "Please select a store and then booking slot date");
+                    $("#no_slot").show();
+                    return;
+                } else {
+                    $("#no_slot").hide();
+                }
                 $("#select_date").text(Date)
                 handleNavigate(Date);
                 console.log('Selected Date: ' + date.format());
                 $(".fc-center h2").text(clickedMonth);
                 console.log("Month", clickedMonth)
+
+                // Navigate to the specified month
+                const parsedDate = moment(clickedMonth, "MMMM YYYY");
+                $('#calendar').fullCalendar('gotoDate', parsedDate);
+                $('td').removeClass('fc-today');
+                var currentMonth = moment().format("MMMM YYYY");
+                if ($(".fc-center h2").text() == currentMonth) {
+                    $(".fc-prev-button").hide();
+                } else {
+                    $(".fc-prev-button").show();
+                }
             }
         }
     });
@@ -180,13 +198,6 @@ function storeNameHandler() {
 
 }
 function handleNavigate(newDate) {
-    if ($("#storeDropdown").val() == "null") {
-        FireSwalalert("warning", "Please select a store and then booking slot date");
-        $("#no_slot").show();
-        return;
-    } else {
-        $("#no_slot").hide();
-    }
     var CurrenttDate = moment().format("YYYY-MM-DD")
     timeSlots = [];
     pastSlots = [];
