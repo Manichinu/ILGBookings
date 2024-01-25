@@ -12,8 +12,8 @@ var phoneNo;
 var emailId;
 var NameLength;
 var NoofAttendees;
-
-
+var BrandID = [];
+var BrandObject;
 
 $(document).ready(function () {
     const searchParams = new URLSearchParams(window.location.search);
@@ -51,9 +51,10 @@ function getEventsMaster() {
         },
     };
     $.ajax(Items).done(function (response) {
-        console.log("Events", response)
+        BrandID = []
         for (var i = 0; i < response.length; i++) {
             if (response[i].EventID == EventID) {
+                console.log("Event", response)
                 $("#company_name").text(response[i].CompanyName);
                 $("#location").attr("href", response[i].Map);
                 $("#venue").val(response[i].Venue)
@@ -67,8 +68,13 @@ function getEventsMaster() {
                 slotBookingStartTime = response[i].SlotStartTime;
                 SlotBookingEndTime = response[i].SlotEndTime;
                 SlotDuration = response[i].SlotDurationTime;
+                response[i].Brand.map((item) => {
+                    BrandID.push(item.Id)
+                })
             }
         }
+        console.log("BrandID", BrandID)
+        BrandObject = BrandID.map(value => ({ Id: value }));
         // Parse the date strings to create Date objects
         var startDateParts = StartDate.split('-');
         var endDateParts = EndDate.split('-');
@@ -383,7 +389,8 @@ function saveEventDetails() {
                     RequestFrom: "User",
                     Map: $("#location").attr('href'),
                     UserID: `UEID-${moment().format("DDMMYYYYHHmmssSSS")}-${key}`,
-                    QRCodeText: generateRandomAlphaNumeric()
+                    QRCodeText: generateRandomAlphaNumeric(),
+                    Brand: BrandObject
                 }),
             };
 
