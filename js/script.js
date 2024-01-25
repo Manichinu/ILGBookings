@@ -302,7 +302,6 @@ function handleNavigate(newDate) {
     pastSlots.map((item) => {
         const slotTime = moment(item, 'hh:mm A');
         const elementId = `${CurrenttDate}-${item}`;
-        console.log("#" + elementId + "")
         if (slotTime.isBefore(currentTime)) {
             $("li[id='" + elementId + "']").addClass('closed')
             $("li[id='" + elementId + "']").removeAttr('onclick')
