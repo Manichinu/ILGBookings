@@ -18,6 +18,8 @@ var Count = 0;
 var NameLength;
 var clickedMonth;
 var isDayClickEnabled = true;
+var pastSlots = [];
+
 
 $(document).ready(function () {
     GetOutOfOfficeDetails();
@@ -178,7 +180,16 @@ function storeNameHandler() {
 
 }
 function handleNavigate(newDate) {
+    if ($("#storeDropdown").val() == "null") {
+        FireSwalalert("warning", "Please select a store and then booking slot date");
+        $("#no_slot").show();
+        return;
+    } else {
+        $("#no_slot").hide();
+    }
+    var CurrenttDate = moment().format("YYYY-MM-DD")
     timeSlots = [];
+    pastSlots = [];
     var date = moment(newDate).format('YYYY-MM-DD');
     if (moment(date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
         $("#slots").empty();
@@ -239,10 +250,11 @@ function handleNavigate(newDate) {
             const timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.Name == storeName).map(slot =>
                 slot.Time.replace(/\s+/g, '')
             );
-            console.log(timeSlotsWithoutSpaces)
             const normalizedItem = item.replace(/\s+/g, '')
-            console.log(normalizedItem)
             const isDisabled = timeSlotsWithoutSpaces.indexOf(normalizedItem) !== -1;
+            var pastTime = item.split('to')
+            var TrimValue = pastTime[1].trim()
+            pastSlots.push(TrimValue)
             if (isDisabled) {
                 $("#slots").append(`
                   <li title='Slot not available'
@@ -252,23 +264,41 @@ function handleNavigate(newDate) {
                   </li>
                 `);
             } else {
-                $("#slots").append(`  
+                if (CurrenttDate == date) {
+                    $("#slots").append(`  
+                    <li  key='${item}'
+                    class="leavedays-wrapper-OutOfc"
+                    onclick="handleTimeSlotSelection(event,'${item}')"
+                    id='${CurrenttDate}-${TrimValue}'
+                    >
+                     ${item}
+                     </li>`)
+                } else {
+                    $("#slots").append(`  
                 <li  key='${item}'
                 class="leavedays-wrapper-OutOfc"
                 onclick="handleTimeSlotSelection(event,'${item}')"
                 >
                  ${item}
                  </li>`)
+                }
             }
         })
+        console.log("pastSlots", pastSlots)
     }
 
-    if ($("#storeDropdown").val() == "null") {
-        FireSwalalert("warning", "Please select a store and then booking slot date");
-        $("#no_slot").show();
-    } else {
-        $("#no_slot").hide();
-    }
+    const currentTime = moment();
+    pastSlots.map((item) => {
+        const slotTime = moment(item, 'hh:mm A');
+        const elementId = `${CurrenttDate}-${item}`;
+        console.log("#" + elementId + "")
+        if (slotTime.isBefore(currentTime)) {
+            $("li[id='" + elementId + "']").addClass('closed')
+            $("li[id='" + elementId + "']").removeAttr('onclick')
+        }
+    })
+
+
     bookings.map((item) => {
         $("li[key='" + item.timeRange + "']").addClass('select');
     })
