@@ -14,6 +14,10 @@ var NameLength;
 var NoofAttendees;
 var BrandID = [];
 var BrandObject;
+var DateCount = 0;
+var pastSlots = [];
+
+
 
 $(document).ready(function () {
     const searchParams = new URLSearchParams(window.location.search);
@@ -83,7 +87,7 @@ function getEventsMaster() {
 
         // Array to store the dates in between
         var datesInRange = [];
-
+        DateCount = 0;
         // Iterate through the dates and add them to the array
         for (var currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
             datesInRange.push(new Date(currentDate));
@@ -93,17 +97,25 @@ function getEventsMaster() {
             var Date = date.toLocaleDateString();
             var Month = moment(Date, "MM/DD/YYYY").format("MMM");
             var Day = moment(Date, "MM/DD/YYYY").format("DD");
-            $("#inbetween_dates").append(`<div class="date-picker f-left" id="date-${index}" onclick="setTimeSlots('${Date}')">
+            if (moment(Date, "MM/DD/YYYY").isBefore(moment(), 'day')) {
+                $("#inbetween_dates").append(`<div class="date-picker f-left">
             <p class="mnth-name">${Month}</p>
             <h3 class="date-no">${Day}</h3>
         </div>`)
+            } else {
+                DateCount += 1;
+                $("#inbetween_dates").append(`<div class="date-picker f-left dates" id="date-${DateCount}" onclick="setTimeSlots('${Date}')">
+            <p class="mnth-name">${Month}</p>
+            <h3 class="date-no">${Day}</h3>
+        </div>`)
+            }
         });
-        $(".date-picker").on('click', function () {
+        $(".dates").on('click', function () {
             $(".date-picker").removeClass('active');
             $(this).addClass('active');
         })
-        $("#date-0").trigger('click');
-        console.log("Dates in Between:", datesInRangeStrings);
+        $("#date-1").trigger('click');
+        // console.log("Dates in Between:", datesInRangeStrings);
 
         // check EndDate is Expired or not       
         if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
@@ -124,21 +136,48 @@ function getEventsMaster() {
     });
 }
 function setTimeSlots(date) {
+    var CurrenttDate = moment().format("YYYY-MM-DD")
     const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, date);
     console.log("Timeslots array : " + generatedTimeSlots);
     timeSlots = [];
+    pastSlots = [];
     timeSlots = generatedTimeSlots;
     $("#slots").empty();
+    console.log(date)
     timeSlots.map((item, key) => {
-        $("#slots").append(`  
+        var pastTime = item.split('to')
+        var TrimValue = pastTime[1].trim()
+        pastSlots.push(TrimValue)
+        if (CurrenttDate == moment(date, "MM/DD/YYYY").format("YYYY-MM-DD")) {
+            $("#slots").append(`  
+            <li  key='${item}'
+            class="leavedays-wrapper-OutOfc eve_slot"
+            onclick="handleTimeSlotSelection(event,'${item}')"
+            id='${CurrenttDate}-${TrimValue}'
+            >
+             ${item}
+             </li>`)
+        } else {
+            $("#slots").append(`  
             <li  key='${item}'
             class="leavedays-wrapper-OutOfc eve_slot"
             onclick="handleTimeSlotSelection(event,'${item}')"
             >
              ${item}
              </li>`)
+        }
+
     })
     getEventBookingTransaction();
+    const currentTime = moment();
+    pastSlots.map((item) => {
+        const slotTime = moment(item, 'hh:mm A');
+        const elementId = `${CurrenttDate}-${item}`;
+        if (slotTime.isBefore(currentTime)) {
+            $("li[id='" + elementId + "']").addClass('closed')
+            $("li[id='" + elementId + "']").removeAttr('onclick')
+        }
+    })
     bookings.map((item) => {
         var Date = moment(item.selectedDate, "DD-MM-YYYY").format("YYYY-MM-DD")
         $(`li[key='${Date} | ${item.startTime} to ${item.endTime}']`).addClass('select');
