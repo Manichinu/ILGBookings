@@ -98,7 +98,7 @@ function getEventsMaster() {
             var Month = moment(Date, "MM/DD/YYYY").format("MMM");
             var Day = moment(Date, "MM/DD/YYYY").format("DD");
             if (moment(Date, "MM/DD/YYYY").isBefore(moment(), 'day')) {
-                $("#inbetween_dates").append(`<div class="date-picker f-left">
+                $("#inbetween_dates").append(`<div class="date-picker f-left date-closed">
             <p class="mnth-name">${Month}</p>
             <h3 class="date-no">${Day}</h3>
         </div>`)
