@@ -120,6 +120,8 @@ $(document).ready(function () {
         var currentMonth = moment().format("MMMM YYYY");
         if ($(".fc-center h2").text() == currentMonth) {
             $(".fc-prev-button").hide();
+            var TodayDate = moment().format("YYYY-MM-DD");
+            handleNavigate(TodayDate)
         } else {
             $(".fc-prev-button").show();
         }
