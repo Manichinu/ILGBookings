@@ -53,16 +53,24 @@
                         </div>
                         <div class="col-md-6 required">
                             <div class="form-group">
+                                <div class="form-group">
+                                    <label for="usr" class="float-label">Event Name<span>*</span></label>
+                                    <input type="text" readonly placeholder="Enter Event Name" class="form-control" id="event_name" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row add-map" id="map_location">
+                        <div class="col-md-6 required">
+                            <div class="form-group">
                                 <label for="usr" class="float-label">Venue<span>*</span></label>
                                 <input readonly type="text"
                                     placeholder=" WB27-WB28 Logistics District - Dubai South - Dubai - UAE"
                                     class="form-control" id="venue" />
                             </div>
                         </div>
-
-                    </div>
-                    <div class="row add-map" id="map_location">
-                        <div class="col-md-12 location-map required"><label htmlFor="usr"
+                        <div class="col-md-6 location-map required"><label htmlFor="usr"
                                 class="location-label">Location<span>*</span></label>
                             <div class="location-url"><a id="location" href="" data-interception='off'
                                     target='_blank'>Click

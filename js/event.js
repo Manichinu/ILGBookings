@@ -60,6 +60,7 @@ function getEventsMaster() {
             if (response[i].EventID == EventID) {
                 console.log("Event", response)
                 $("#company_name").text(response[i].CompanyName);
+                $("#event_name").val(response[i].EventName)
                 $("#location").attr("href", response[i].Map);
                 $("#venue").val(response[i].Venue)
                 $("#start_month").text(moment(response[i].StartDate, "DD-MM-YYYY").format("MMM"));
@@ -429,7 +430,8 @@ function saveEventDetails() {
                     Map: $("#location").attr('href'),
                     UserID: `UEID-${moment().format("DDMMYYYYHHmmssSSS")}-${key}`,
                     QRCodeText: generateRandomAlphaNumeric(),
-                    Brand: BrandObject
+                    Brand: BrandObject,
+                    EventName: $("#event_name").val()
                 }),
             };
 
