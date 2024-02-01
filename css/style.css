@@ -2896,7 +2896,7 @@ body {
     border: 1px solid #818181;
     color: #818181;
     padding: 10px 5px;
-    width: 25%;
+    width: 24%;
     display: inline-block;
     border-radius: 2px;
     margin-right: 0;
@@ -2950,6 +2950,7 @@ body {
     cursor: pointer;
     box-shadow: 0px 0px 2px 0px #00000040;
     margin-left: 30px;
+    width:57px;
 }
 
 
@@ -3340,4 +3341,17 @@ td.selected-date {
 
 .fc-prev-button {
     display: none;
+}
+.event-appoinment-form .location-map{
+        position: relative;
+}
+.event-appoinment-form .location-label{
+    top: -12px;
+    position: absolute;
+}
+.location-map .location-url{
+    margin-top: 10px;
+}
+.event-appoinment-form .select-slot-time ul{
+    width: 95%;
 }
