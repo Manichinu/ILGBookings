@@ -2939,6 +2939,8 @@ body {
 .date-pic {
     width: fit-content;
     background: linear-gradient(90deg, rgba(82, 227, 195, 0.39) 0%, rgba(250, 103, 122, 0.39) 92.19%);
+    padding: 28px;
+    padding-right: 0;
 
 }
 
@@ -2949,8 +2951,9 @@ body {
     border-top: 2px solid transparent;
     cursor: pointer;
     box-shadow: 0px 0px 2px 0px #00000040;
-    margin-left: 30px;
-    width:57px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width:7%;
 }
 
 
@@ -3297,7 +3300,7 @@ td.selected-date {
 } */
 .date-picker.f-left:first-child {
     margin-left: 0 !important;
-    border-top: 2px solid #52E3C3;
+    border-top: 2px solid #52E3C3 Im !important;
 }
 
 .date-picker.f-left.active {
@@ -3350,7 +3353,7 @@ td.selected-date {
     position: absolute;
 }
 .location-map .location-url{
-    margin-top: 10px;
+    margin-top: 15px;
 }
 .event-appoinment-form .select-slot-time ul{
     width: 95%;
