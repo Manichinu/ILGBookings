@@ -19,6 +19,7 @@ var NameLength;
 var clickedMonth;
 var isDayClickEnabled = true;
 var pastSlots = [];
+var IsOutofOfficeScheduled;
 
 
 $(document).ready(function () {
@@ -176,7 +177,9 @@ function storeNameHandler() {
         var CurrentDate = moment().format('YYYY-MM-DD');
         for (var i = 0; i < response.length; i++) {
             if (response[i].Title == storeName) {
+                console.log("Selected Store", response[i])
                 console.log("StoreLocation", response[i].MapLocation)
+                IsOutofOfficeScheduled = response[i].IsOutofOfficeScheduled;
                 EndDate = response[i].EndDate;
                 slotBookingStartTime = response[i].SlotBookingStartTime;
                 SlotBookingEndTime = response[i].SlotBookingEndTime;
@@ -260,9 +263,14 @@ function handleNavigate(newDate) {
         timeSlots = generatedTimeSlots;
         $("#slots").empty();
         timeSlots.map((item, key) => {
-            const timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.Name == storeName).map(slot =>
-                slot.Time.replace(/\s+/g, '')
-            );
+            var timeSlotsWithoutSpaces;
+            if (IsOutofOfficeScheduled == true) {
+                timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.Name == storeName).map(slot =>
+                    slot.Time.replace(/\s+/g, '')
+                );
+            } else {
+                timeSlotsWithoutSpaces = []
+            }
             const normalizedItem = item.replace(/\s+/g, '')
             const isDisabled = timeSlotsWithoutSpaces.indexOf(normalizedItem) !== -1;
             var pastTime = item.split('to')
