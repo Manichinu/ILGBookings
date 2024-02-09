@@ -3022,7 +3022,7 @@ body {
 .selected-date span {
     /* background: #fcf8e3; */
     background: #f27766 !important;
-    padding: 5px 6px !important;
+    padding: 5px 9px !important;
     border-radius: 14px;
     color: #fff;
     font-size: 12px !important;
@@ -3173,7 +3173,7 @@ td.selected-date {
 #no_slot {
     text-align: center;
         text-align: center;
-        background: url(https://ilgitsupport.sharepoint.com/sites/ILGBookings/SiteAssets/ILG%20Bookings%20Application%20Assets/images/no-slot.svg);
+        background: url(../img/no-slot.svg);
         background-repeat: no-repeat;
         width: 30%;
         padding: 20px;
