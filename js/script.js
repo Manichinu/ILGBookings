@@ -20,6 +20,7 @@ var clickedMonth;
 var isDayClickEnabled = true;
 var pastSlots = [];
 var IsOutofOfficeScheduled;
+var StoreExpiryDate;
 
 
 $(document).ready(function () {
@@ -186,6 +187,7 @@ function storeNameHandler() {
                 SlotDuration = response[i].SlotDuration;
                 StartDate = response[i].StartDate;
                 storeID = response[i].StoreId;
+                StoreExpiryDate = response[i].StoreExpiryDate;
                 $("#startdate").text(moment(StartDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#enddate").text(moment(EndDate, "DD-MM-YYYY").format("MMM DD, YYYY"));
                 $("#location").attr("href", response[i].MapLocation)
@@ -223,6 +225,23 @@ function handleNavigate(newDate) {
             $('td[data-date="' + date + '"]').addClass('selected-date');
             // $(jsEvent.target).addClass('selected-date');
         }, 100)
+    }
+    if (moment(StoreExpiryDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
+        $("#accompanying_people").hide()
+        $("#slot_times").hide()
+        $(".not-possible-to-choose").addClass("show");
+        $("#slots").empty();
+        $("#no_booking_available").show();
+        isDayClickEnabled = false;
+        $(".fc-day-top").css("pointer-events", "none");
+        return;
+    } else {
+        $("#no_booking_available").hide();
+        $("#accompanying_people").show()
+        $("#slot_times").show()
+        $(".not-possible-to-choose").removeClass("show");
+        isDayClickEnabled = true;
+        $(".fc-day-top").css("pointer-events", "");
     }
 
     if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
