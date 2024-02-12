@@ -16,8 +16,10 @@ var BrandID = [];
 var BrandObject;
 var DateCount = 0;
 var pastSlots = [];
-
-
+var MapLink;
+var EventName;
+var Template;
+var BrandImages = []
 
 $(document).ready(function () {
     const searchParams = new URLSearchParams(window.location.search);
@@ -45,6 +47,7 @@ $(document).ready(function () {
     });
 })
 function getEventsMaster() {
+    getBrandsMaster();
     var Items = {
         "url": "https://prod-10.uaecentral.logic.azure.com:443/workflows/9a6d4449d1cb45848a25b73aa1514a0b/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4xHKwpYWyjFyG16vDDdcFFcOy6RkQ_GRnQ9aqq_F75U",
         "method": "POST",
@@ -73,12 +76,29 @@ function getEventsMaster() {
                 slotBookingStartTime = response[i].SlotStartTime;
                 SlotBookingEndTime = response[i].SlotEndTime;
                 SlotDuration = response[i].SlotDurationTime;
+                MapLink = response[i].Map;
+                EventName = response[i].EventName;
+                Template = response[i].Template1 == true ? "temp1" : "temp2";
+                $(".brand_images").empty()
                 response[i].Brand.map((item) => {
                     BrandID.push(item.Id)
                 })
             }
         }
         console.log("BrandID", BrandID)
+        setTimeout(() => {
+            BrandID.map((item) => {
+                BrandImages.map((img) => {
+                    if (item == img.ID) {
+                        $(".brand_images").append(` <li style="margin-right: 50px;margin-bottom: 20px;">
+                    <img src="${img.Base64Image}" style="width: 14px;height:14px;" />            
+                    <p>${img.Title}</p>
+                </li>`)
+                    }
+                })
+            })
+        }, 1000)
+
         BrandObject = BrandID.map(value => ({ Id: value }));
         // Parse the date strings to create Date objects
         var startDateParts = StartDate.split('-');
@@ -232,6 +252,7 @@ function handleTimeSlotSelection(event, value) {
                 endTime: storeEndTime,
                 selectedDate: moment(selectedDateValue).format("DD-MM-YYYY"),
                 uniqueIdentifier,
+                slotTime: "" + storeStartTime + " to " + storeEndTime + ""
             };
             console.log("newBooking", newBooking);
             // Update the state with the new booking
@@ -405,6 +426,7 @@ function reqoff() {
     location.reload();
 }
 function saveEventDetails() {
+    $("#pending").show()
     try {
         bookings.map((item, key) => {
             var postItem = {
@@ -436,9 +458,56 @@ function saveEventDetails() {
             };
 
             $.ajax(postItem).done(function (response) {
+                console.log("Saved Items", response)
+                if (Template == "temp1") {
+                    $(".Template1").show();
+                    $("#txt-pdf_eventname_temp1").text("" + EventName + "");
+                } else {
+                    $(".Template2").show();
+                    $("#txt-pdf_eventname_temp2").text("" + EventName + "");
+                }
+                $(".pdf_username").text(userName);
+                $(".pdf_usernumber").text(phoneNo);
+                $(".pdf_useremail").text(emailId);
+                $(".pdf_map").attr("href", MapLink);
+                $(".pdf_map").text(MapLink);
+                $(".qr_number").text(response[0].QRCodeText)
+                $("#qr-code").empty()
+                generateQrCode(response[0].ID);
+
+                $(".table_date").text(response[0].AppointmentDate);
+                $(".table_slot").text("" + response[0].AppointmentStartTime + " to " + response[0].AppointmentEndTime + "");
+                $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+                // var element = document.getElementById('genrate-info');
+                // html2canvas(element)
+                //     .then(async (canvas) => {
+                //         var imgWidth = 200;
+                //         var imgHeight = canvas.height * imgWidth / canvas.width;
+                //         const imgData = canvas.toDataURL('image/png');
+                //         const mynewpdf = new jsPDF('p', 'mm', 'a4');
+                //         var position = 0;
+                //         mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+                //         mynewpdf.save('Ticket.pdf');
+                //     })
+                var element = document.getElementById('genrate-info');
+                $('.qrl-img img').css('width', '100px');
+                html2canvas(element).then(function (canvas) {
+                    var imgWidth = 200;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    const imgData = canvas.toDataURL('image/png');
+                    const mynewpdf = new jsPDF('p', 'mm', 'a4');
+                    var position = 0;
+                    mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+                    mynewpdf.save('Ticket.pdf');
+                }).catch(function (error) {
+                    console.error('Error capturing element:', error);
+                });
             });
         });
-        $("#StoreBookingURL").show();
+        setTimeout(() => {
+            $("#pending").hide()
+            $("#StoreBookingURL").show();
+        }, 3000)
     } catch (error) {
         console.error(error);
     }
@@ -489,4 +558,59 @@ function generateRandomAlphaNumeric() {
     }
 
     return result;
+}
+function getBrandsMaster() {
+    var Items = {
+        "url": "https://prod-13.uaecentral.logic.azure.com:443/workflows/83b95c3a23794b59906a59723e95caf5/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NqY0HvtJYRo8oJo62hhRcYcBtPowTCfcdFDPheYRX9k",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json;odata=verbose",
+            "Access-Control-Allow-Origin": "*"
+        },
+    };
+    $.ajax(Items).done(function (response) {
+        BrandImages = []
+        BrandImages = response
+        console.log(BrandImages)
+        console.log("Brands", response)
+    });
+}
+function generateQrCode(id) {
+    return new QRCode("qr-code", {
+        text: id,
+        width: 100,
+        height: 100,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+    });
+}
+function downloadContentasPdf() {
+    $("#genrate-info").show();
+    $(".pdf_username").text(userName);
+    $(".pdf_usernumber").text(phoneNo);
+    $(".pdf_useremail").text(emailId);
+    $(".pdf_map").attr("href", MapLink);
+    $(".pdf_map").text(MapLink);
+    $(".pdf_eventname").text(EventName)
+    generateQrCode();
+
+    bookings.map((item, key) => {
+        $(".table_date").text(item.selectedDate);
+        $(".table_slot").text(item.slotTime);
+        $(".qr_date").text(moment(item.selectedDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+        var element = document.getElementById('genrate-info');
+        html2canvas(element)
+            .then(async (canvas) => {
+                var imgWidth = 200;
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+                const mynewpdf = new jsPDF('p', 'mm', 'a4');
+                var position = 0;
+                mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+                mynewpdf.save('Ticket.pdf');
+            })
+    });
+
 }
