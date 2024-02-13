@@ -45,6 +45,7 @@ $(document).ready(function () {
     $("#email").on('keyup', function (e) {
         emailHandler(e);
     });
+
 })
 function getEventsMaster() {
     getBrandsMaster();
@@ -425,91 +426,227 @@ function reqoff() {
     $("#StoreBookingURL").hide();
     location.reload();
 }
-function saveEventDetails() {
-    $("#pending").show()
+async function saveEventDetails() {
+    $("#pending").show();
     try {
-        bookings.map((item, key) => {
-            var postItem = {
-                url: "https://prod-20.uaecentral.logic.azure.com:443/workflows/4a9f67689d304ae1a2af26b16b450f92/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-TAoPfI6APjpUi9mUZ2rFwKsfbAL1gbqpRDBFK5UwaE",
-                method: "POST",
-                timeout: 0,
-                cors: true,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    "Accept": "application/json; odata=nometadata",
-                    "Content-Type": "application/json; odata=nometadata"
-                },
-                "data": JSON.stringify({
-                    Name: userName,
-                    Email: emailId,
-                    Number: parseInt(phoneNo),
-                    Venue: $("#venue").val(),
-                    AppointmentStartTime: item.startTime,
-                    AppointmentEndTime: item.endTime,
-                    AppointmentDate: item.selectedDate,
-                    EventID: EventID,
-                    RequestFrom: "User",
-                    Map: $("#location").attr('href'),
-                    UserID: `UEID-${moment().format("DDMMYYYYHHmmssSSS")}-${key}`,
-                    QRCodeText: generateRandomAlphaNumeric(),
-                    Brand: BrandObject,
-                    EventName: $("#event_name").val()
-                }),
-            };
+        const ajaxPromises = bookings.map((item, key) => {
+            return new Promise((resolve, reject) => {
+                var postItem = {
+                    url: "https://prod-20.uaecentral.logic.azure.com:443/workflows/4a9f67689d304ae1a2af26b16b450f92/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-TAoPfI6APjpUi9mUZ2rFwKsfbAL1gbqpRDBFK5UwaE",
+                    method: "POST",
+                    timeout: 0,
+                    cors: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        "Accept": "application/json; odata=nometadata",
+                        "Content-Type": "application/json; odata=nometadata"
+                    },
+                    "data": JSON.stringify({
+                        Name: userName,
+                        Email: emailId,
+                        Number: parseInt(phoneNo),
+                        Venue: $("#venue").val(),
+                        AppointmentStartTime: item.startTime,
+                        AppointmentEndTime: item.endTime,
+                        AppointmentDate: item.selectedDate,
+                        EventID: EventID,
+                        RequestFrom: "User",
+                        Map: $("#location").attr('href'),
+                        UserID: `UEID-${moment().format("DDMMYYYYHHmmssSSS")}-${key}`,
+                        QRCodeText: generateRandomAlphaNumeric(),
+                        Brand: BrandObject,
+                        EventName: $("#event_name").val()
+                    }),
+                };
 
-            $.ajax(postItem).done(function (response) {
-                console.log("Saved Items", response)
-                if (Template == "temp1") {
-                    $(".Template1").show();
-                    $("#txt-pdf_eventname_temp1").text("" + EventName + "");
-                } else {
-                    $(".Template2").show();
-                    $("#txt-pdf_eventname_temp2").text("" + EventName + "");
-                }
-                $(".pdf_username").text(userName);
-                $(".pdf_usernumber").text(phoneNo);
-                $(".pdf_useremail").text(emailId);
-                $(".pdf_map").attr("href", MapLink);
-                $(".pdf_map").text(MapLink);
-                $(".qr_number").text(response[0].QRCodeText)
-                $("#qr-code").empty()
-                generateQrCode(response[0].ID);
+                $.ajax(postItem)
+                    .done(function (response) {
+                        console.log("Saved Items", response)
+                        if (Template == "temp1") {
+                            $(".Template1").show();
+                            $("#qr-code1").empty()
+                            $("#txt-pdf_eventname_temp1").text("" + EventName + "");
+                        } else {
+                            $(".Template2").show();
+                            $("#qr-code2").empty()
+                            $("#txt-pdf_eventname_temp2").text("" + EventName + "");
+                        }
 
-                $(".table_date").text(response[0].AppointmentDate);
-                $(".table_slot").text("" + response[0].AppointmentStartTime + " to " + response[0].AppointmentEndTime + "");
-                $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
-                // var element = document.getElementById('genrate-info');
-                // html2canvas(element)
-                //     .then(async (canvas) => {
-                //         var imgWidth = 200;
-                //         var imgHeight = canvas.height * imgWidth / canvas.width;
-                //         const imgData = canvas.toDataURL('image/png');
-                //         const mynewpdf = new jsPDF('p', 'mm', 'a4');
-                //         var position = 0;
-                //         mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
-                //         mynewpdf.save('Ticket.pdf');
-                //     })
-                var element = document.getElementById('genrate-info');
-                $('.qrl-img img').css('width', '100px');
+                        $(".pdf_username").text(userName);
+                        $(".pdf_usernumber").text(phoneNo);
+                        $(".pdf_useremail").text(emailId);
+                        $(".pdf_map").attr("href", MapLink);
+                        $(".pdf_map").text(MapLink);
+                        $(".qr_number").text(response[0].QRCodeText)
+                        generateQrCode(response[0].ID);
+
+                        $(".table_date").text(response[0].AppointmentDate);
+                        $(".table_slot").text("" + response[0].AppointmentStartTime + " to " + response[0].AppointmentEndTime + "");
+                        $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+
+                        $('.qrl-img img').css('width', '100px');
+
+
+                        resolve(response); // Resolve the promise after successful AJAX call
+                    })
+                    .fail(function (error) {
+                        console.error('Error in AJAX request:', error);
+                        reject(error); // Reject the promise in case of an error
+                    });
+            });
+        });
+
+        // Wait for all promises to settle
+        const responses = await Promise.all(ajaxPromises);
+
+        responses.forEach(response => {
+            // Handle each response individually if needed
+        });
+
+        // Create a new JSZip instance
+        var zip = new JSZip();
+
+        // Create an empty array to hold the PDF file contents
+        var pdfContents = [];
+
+        // Iterate over bookings to generate PDFs and add them to the zip
+        if (bookings.length != 0 && bookings.length == 1) {
+            var element;
+            if (Template == "temp1") {
+                element = document.getElementsByClassName('Template1');
+            } else {
+                element = document.getElementsByClassName('Template2');
+            }
+            html2canvas(element).then(function (canvas) {
+                var imgWidth = 200;
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+                const mynewpdf = new jsPDF('p', 'mm', 'a4');
+                var position = 0;
+                mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+                var linkCoordinates = {
+                    x: 50,
+                    y: 40,
+                    width: 13,
+                    height: 3,
+                    url: '' + MapLink + ''
+                };
+
+                mynewpdf.setDrawColor(0);
+                mynewpdf.setFillColor(255, 255, 255); // Transparent fill color
+                mynewpdf.rect(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, 'F');
+                mynewpdf.link(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, { url: linkCoordinates.url });
+
+                // Set text color
+                mynewpdf.setTextColor(72, 147, 193); // Set text color to white
+
+                // Set font size and style
+                mynewpdf.setFontSize(6); // Set font size to 12 points
+                mynewpdf.setFont('helvetica', 'normal'); // Set font to Helvetica, normal style
+
+                // Calculate position for the text label
+                var textX = linkCoordinates.x + 1; // Offset the text label from the left edge of the link
+                var textY = linkCoordinates.y + linkCoordinates.height - 1; // Offset the text label below the link
+
+                // Add the text label
+                mynewpdf.text('' + MapLink + '', textX, textY); // Display 'Click Here' as the text label
+                mynewpdf.save('Ticket.pdf');
+
+                setTimeout(() => {
+                    // Hide pending indicator
+                    $("#pending").hide();
+
+                    // Show StoreBookingURL
+                    $("#StoreBookingURL").show();
+                }, 2000);
+            }).catch(function (error) {
+                console.error('Error capturing element:', error);
+                //$("#pending").hide();
+            });
+        } else {
+            bookings.forEach((item, index) => {
+                var element = (Template == "temp1") ? document.getElementsByClassName('Template1') : document.getElementsByClassName('Template2');
+
                 html2canvas(element).then(function (canvas) {
                     var imgWidth = 200;
                     var imgHeight = canvas.height * imgWidth / canvas.width;
                     const imgData = canvas.toDataURL('image/png');
-                    const mynewpdf = new jsPDF('p', 'mm', 'a4');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
                     var position = 0;
-                    mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
-                    mynewpdf.save('Ticket.pdf');
+                    pdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+                    var linkCoordinates = {
+                        x: 50,
+                        y: 40,
+                        width: 13,
+                        height: 3,
+                        url: '' + MapLink + ''
+                    };
+
+                    pdf.setDrawColor(0);
+                    pdf.setFillColor(255, 255, 255); // Transparent fill color
+                    pdf.rect(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, 'F');
+                    pdf.link(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, { url: linkCoordinates.url });
+
+                    // Set text color
+                    pdf.setTextColor(72, 147, 193); // Set text color to white
+
+                    // Set font size and style
+                    pdf.setFontSize(6); // Set font size to 12 points
+                    pdf.setFont('helvetica', 'normal'); // Set font to Helvetica, normal style
+
+                    // Calculate position for the text label
+                    var textX = linkCoordinates.x + 1; // Offset the text label from the left edge of the link
+                    var textY = linkCoordinates.y + linkCoordinates.height - 1; // Offset the text label below the link
+
+                    // Add the text label
+                    pdf.text('' + MapLink + '', textX, textY);
+                    // Push the PDF content to the array
+                    pdfContents.push(pdf.output());
+
+                    // Check if all PDFs have been generated
+                    if (pdfContents.length === bookings.length) {
+                        // Add all PDF contents to the zip
+                        pdfContents.forEach((content, i) => {
+                            zip.file(`Ticket_${i + 1}.pdf`, content, { binary: true });
+                        });
+
+                        // Generate the zip file asynchronously
+                        zip.generateAsync({ type: 'blob' })
+                            .then(function (zipContent) {
+                                // Create a Blob containing the zip file content
+                                var zipBlob = new Blob([zipContent], { type: 'application/zip' });
+
+                                // Create a URL for the Blob
+                                var zipUrl = window.URL.createObjectURL(zipBlob);
+
+                                // Create a link element and trigger the download
+                                var link = document.createElement('a');
+                                link.href = zipUrl;
+                                link.download = 'EventTickets.zip';
+                                document.body.appendChild(link);
+                                link.click();
+
+                                // Clean up
+                                window.URL.revokeObjectURL(zipUrl);
+                                setTimeout(() => {
+                                    // Hide pending indicator
+                                    $("#pending").hide();
+
+                                    // Show StoreBookingURL
+                                    $("#StoreBookingURL").show();
+                                }, 2000);
+                            });
+                    }
                 }).catch(function (error) {
                     console.error('Error capturing element:', error);
                 });
             });
-        });
-        setTimeout(() => {
-            $("#pending").hide()
-            $("#StoreBookingURL").show();
-        }, 3000)
+        }
+
     } catch (error) {
-        console.error(error);
+        console.error('Error in saveEventDetails:', error);
+        $("#pending").hide();
+        // Handle error as needed
     }
 }
 function getEventBookingTransaction() {
@@ -577,40 +714,24 @@ function getBrandsMaster() {
     });
 }
 function generateQrCode(id) {
-    return new QRCode("qr-code", {
-        text: id,
-        width: 100,
-        height: 100,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-    });
+    if (Template == "temp1") {
+        return new QRCode("qr-code1", {
+            text: "" + id + "",
+            width: 100,
+            height: 100,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+    } else {
+        return new QRCode("qr-code2", {
+            text: "" + id + "",
+            width: 100,
+            height: 100,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+    }
 }
-function downloadContentasPdf() {
-    $("#genrate-info").show();
-    $(".pdf_username").text(userName);
-    $(".pdf_usernumber").text(phoneNo);
-    $(".pdf_useremail").text(emailId);
-    $(".pdf_map").attr("href", MapLink);
-    $(".pdf_map").text(MapLink);
-    $(".pdf_eventname").text(EventName)
-    generateQrCode();
 
-    bookings.map((item, key) => {
-        $(".table_date").text(item.selectedDate);
-        $(".table_slot").text(item.slotTime);
-        $(".qr_date").text(moment(item.selectedDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
-        var element = document.getElementById('genrate-info');
-        html2canvas(element)
-            .then(async (canvas) => {
-                var imgWidth = 200;
-                var imgHeight = canvas.height * imgWidth / canvas.width;
-                const imgData = canvas.toDataURL('image/png');
-                const mynewpdf = new jsPDF('p', 'mm', 'a4');
-                var position = 0;
-                mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
-                mynewpdf.save('Ticket.pdf');
-            })
-    });
-
-}
