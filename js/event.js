@@ -87,9 +87,12 @@ function getEventsMaster() {
             BrandID.map((item) => {
                 BrandImages.map((img) => {
                     if (item == img.ID) {
-                        $(".brand_images").append(` <li style="margin-right: 50px;margin-bottom: 20px;">
-                    <img src="${img.Base64Image}" style="width: 14px;height:14px;" />            
-                    <p>${img.Title}</p>
+                        $(".brand_images").append(` <li style="height: 40px;
+                        margin-bottom: 0 !important;margin-right:10px;">
+                    <img src="${img.Base64Image}" style="width: 40px;height: calc(100% - 20px);" />            
+                    <p style="height: 20px;
+    margin-top: 10px;
+    margin-bottom: 0;">${img.Title}</p>
                 </li>`)
                     }
                 })
@@ -510,7 +513,7 @@ async function saveEventDetails() {
                 mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
                 var linkCoordinates = {
                     x: 50,
-                    y: 40,
+                    y: 34,
                     width: 13,
                     height: 3,
                     url: '' + MapLink + ''
@@ -560,7 +563,7 @@ async function saveEventDetails() {
                     pdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
                     var linkCoordinates = {
                         x: 50,
-                        y: 40,
+                        y: 34,
                         width: 13,
                         height: 3,
                         url: '' + MapLink + ''
