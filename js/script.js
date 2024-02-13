@@ -88,9 +88,7 @@ $(document).ready(function () {
                 }
                 $("#select_date").text(Date)
                 handleNavigate(Date);
-                console.log('Selected Date: ' + date.format());
                 $(".fc-center h2").text(clickedMonth);
-                console.log("Month", clickedMonth)
 
                 // Navigate to the specified month
                 const parsedDate = moment(clickedMonth, "MMMM YYYY");
@@ -148,7 +146,6 @@ function getStoreTypes() {
         },
     };
     $.ajax(Items).done(function (response) {
-        console.log("StoreTypes", response)
         for (var i = 0; i < response.length; i++) {
             $("#storeDropdown").append(`<option key=${response[i].StoreId} value=${response[i].Title} data-storeid=${response[i].StoreId}>${response[i].Title}</option>`)
         }
@@ -163,7 +160,6 @@ function getStoreTypes() {
 }
 function storeNameHandler() {
     storeName = $("#storeDropdown option:selected").text();
-    console.log("storeName", storeName);
     $("#slots").empty();
     var Items = {
         "url": "https://prod-05.uaecentral.logic.azure.com:443/workflows/a1467bc6aab849cc9e7dd579cebe7cef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hlf5tdLLX8uqGkHDScioK6Vh5vkAvJzEkNCUNZ6JgaM",
@@ -178,8 +174,6 @@ function storeNameHandler() {
         var CurrentDate = moment().format('YYYY-MM-DD');
         for (var i = 0; i < response.length; i++) {
             if (response[i].Title == storeName) {
-                console.log("Selected Store", response[i])
-                console.log("StoreLocation", response[i].MapLocation)
                 IsOutofOfficeScheduled = response[i].IsOutofOfficeScheduled;
                 EndDate = response[i].EndDate;
                 slotBookingStartTime = response[i].SlotBookingStartTime;
@@ -277,7 +271,6 @@ function handleNavigate(newDate) {
         selectedDateValue = date;
         appointmentDate = selectedDateValue;
         const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, selectedDateValue);
-        console.log("Timeslots array : " + generatedTimeSlots);
         timeSlots = [];
         timeSlots = generatedTimeSlots;
         $("#slots").empty();
@@ -324,7 +317,6 @@ function handleNavigate(newDate) {
                 }
             }
         })
-        console.log("pastSlots", pastSlots)
     }
 
     const currentTime = moment();
@@ -360,7 +352,6 @@ function generateTimeSlotsArray(startTime, endTime, slotDuration, date) {
         const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         timeSlots.push(`${date} | ${startTimeString} to ${endTimeString}`);
     }
-    console.log("timeSlots", timeSlots);
     return timeSlots;
 }
 function FireSwalalert(firetype, swaltext) {
@@ -382,12 +373,10 @@ function GetOutOfOfficeDetails() {
         },
     };
     $.ajax(Items).done(function (response) {
-        console.log("StoreTypes", response)
         OutOfOfficeTimeSlot = [];
         for (var i = 0; i < response.length; i++) {
             OutOfOfficeTimeSlot.push({ Name: response[i].Title, Time: `${response[i].SelectedDate} | ${response[i].SlotStartTime} to ${response[i].SlotEndTime}` })
         }
-        console.log("OutOfOfficeTimeSlot", OutOfOfficeTimeSlot);
     });
 }
 function GetAccompanyPeopleCount() {
@@ -430,10 +419,8 @@ function handleTimeSlotSelection(event, value) {
         const clickedLiElement = event.currentTarget;
         clickedLiElement.classList.add('select');
         const timeString = event.target.textContent;
-        console.log("timeString", timeString);
         if (timeString) {
             const timeArray = timeString.split("to");
-            console.log("timeString2", timeString);
             const storeStartTime = timeArray[0].trim();
             const storeEndTime = timeArray[1].trim();
             var Start = storeStartTime.split("|");
@@ -442,7 +429,6 @@ function handleTimeSlotSelection(event, value) {
             var startTime = Start[1];
             startTime = convertTo24HourFormat(startTime);
             var endTime = convertTo24HourFormat(storeEndTime);
-            console.log("Result:", startTime, endTime);
 
             // Use a unique identifier based on the time range
             const uniqueIdentifier = `${storeStartTime} to ${storeEndTime}`;
@@ -465,10 +451,8 @@ function handleTimeSlotSelection(event, value) {
                     startTime,
                     endTime
                 };
-                console.log("newBooking", newBooking);
                 // Update the state with the new booking
                 bookings.push(newBooking)
-                console.log("this.booking", bookings);
                 $("#booked_slots").empty();
                 bookings.map((item, key) => {
                     $("#booked_slots").append(` <tr key=${item.id}>
@@ -486,7 +470,7 @@ function handleTimeSlotSelection(event, value) {
                 }
 
             } else {
-                console.log('Booking already exists for this time range.');
+                // console.log('Booking already exists for this time range.');
             }
         } else {
             console.error("Invalid TimeString:", timeString);
@@ -536,7 +520,6 @@ function removeHandler(bookingID) {
                     <td><img src="./img/close-red.svg" class="action-close" onclick="removeHandler('${item.id}')"></td>
                 </tr>`)
     })
-    console.log("this.bookingRemove", bookings);
     if (!userName || !emailId || !phoneNo || storeName == "null" || timeSlots.length === 0 || !appointmentDate || noOfAccompanyingPeople == null || bookings.length === 0 || NameLength == false) {
         $("#submit").prop("disabled", true);
     } else {

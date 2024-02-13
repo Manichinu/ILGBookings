@@ -26,10 +26,8 @@ $(document).ready(function () {
     const hasEventID = searchParams.has("e_02");
     if (hasEventID) {
         EventID = searchParams.get("e_02");
-        console.log(EventID);
         getEventsMaster();
     } else {
-        console.log(EventID);
     }
     $('#number').keypress(function (e) {
         var charCode = (e.which) ? e.which : event.keyCode
@@ -62,7 +60,6 @@ function getEventsMaster() {
         BrandID = []
         for (var i = 0; i < response.length; i++) {
             if (response[i].EventID == EventID) {
-                console.log("Event", response)
                 $("#company_name").text(response[i].CompanyName);
                 $("#event_name").val(response[i].EventName)
                 $("#location").attr("href", response[i].Map);
@@ -86,7 +83,6 @@ function getEventsMaster() {
                 })
             }
         }
-        console.log("BrandID", BrandID)
         setTimeout(() => {
             BrandID.map((item) => {
                 BrandImages.map((img) => {
@@ -137,11 +133,9 @@ function getEventsMaster() {
             $(this).addClass('active');
         })
         $("#date-1").trigger('click');
-        // console.log("Dates in Between:", datesInRangeStrings);
 
         // check EndDate is Expired or not       
         if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
-            console.log("Expired")
             setTimeout(() => {
                 $("#loader-Icon").css("display", "none");
                 $("#event_expired").show();
@@ -149,7 +143,6 @@ function getEventsMaster() {
                 $(".appointment-book-form").empty();
             }, 500);
         } else {
-            console.log("Not Expired")
             setTimeout(() => {
                 $("#loader-Icon").css("display", "none");
                 $(".appointment-book-form").css("display", "");
@@ -160,12 +153,10 @@ function getEventsMaster() {
 function setTimeSlots(date) {
     var CurrenttDate = moment().format("YYYY-MM-DD")
     const generatedTimeSlots = generateTimeSlotsArray(slotBookingStartTime, SlotBookingEndTime, SlotDuration, date);
-    console.log("Timeslots array : " + generatedTimeSlots);
     timeSlots = [];
     pastSlots = [];
     timeSlots = generatedTimeSlots;
     $("#slots").empty();
-    console.log(date)
     timeSlots.map((item, key) => {
         var pastTime = item.split('to')
         var TrimValue = pastTime[1].trim()
@@ -218,17 +209,14 @@ function generateTimeSlotsArray(startTime, endTime, slotDuration, startDate) {
         const endTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         timeSlots.push(`${Start} | ${startTimeString} to ${endTimeString}`);
     }
-    console.log("timeSlots", timeSlots);
     return timeSlots;
 }
 function handleTimeSlotSelection(event, value) {
     const clickedLiElement = event.currentTarget;
     clickedLiElement.classList.add('select');
     const timeString = event.target.textContent;
-    console.log("timeString", timeString);
     if (timeString) {
         const timeArray = timeString.split("to");
-        console.log("timeString2", timeArray);
         var parts = timeString.split('|');
         var storeStartTime = parts[1].trim();
         storeStartTime = storeStartTime.split("to");
@@ -255,10 +243,8 @@ function handleTimeSlotSelection(event, value) {
                 uniqueIdentifier,
                 slotTime: "" + storeStartTime + " to " + storeEndTime + ""
             };
-            console.log("newBooking", newBooking);
             // Update the state with the new booking
             bookings.push(newBooking)
-            console.log("this.booking", bookings);
             $("#booked_slots").empty();
             bookings.map((item, key) => {
                 $("#booked_slots").append(` <tr key=${item.id}>
@@ -275,7 +261,7 @@ function handleTimeSlotSelection(event, value) {
             }
 
         } else {
-            console.log('Booking already exists for this time range.');
+            // console.log('Booking already exists for this time range.');
         }
     } else {
         console.error("Invalid TimeString:", timeString);
@@ -314,7 +300,6 @@ function removeHandler(bookingID) {
     } else {
         $("#submit").prop("disabled", false);
     }
-    console.log("this.bookingRemove", bookings);
 
 };
 function nameHandler(event) {
@@ -461,7 +446,6 @@ async function saveEventDetails() {
 
                 $.ajax(postItem)
                     .done(function (response) {
-                        console.log("Saved Items", response)
                         if (Template == "temp1") {
                             $(".Template1").show();
                             $("#qr-code1").empty()
@@ -666,7 +650,6 @@ function getEventBookingTransaction() {
             (result[key] = result[key] || []).push(item);
             return result;
         }, {});
-        console.log("Groups", groupedByDateTime)
         // Iterate through the grouped items and log each name
         Object.values(groupedByDateTime).forEach(items => {
             var ApprovedCount = 0;
@@ -709,8 +692,6 @@ function getBrandsMaster() {
     $.ajax(Items).done(function (response) {
         BrandImages = []
         BrandImages = response
-        console.log(BrandImages)
-        console.log("Brands", response)
     });
 }
 function generateQrCode(id) {
