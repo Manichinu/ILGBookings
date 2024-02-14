@@ -472,9 +472,18 @@ async function saveEventDetails() {
 
                         $(".table_date").text(response[0].AppointmentDate);
                         $(".table_slot").text("" + response[0].AppointmentStartTime + " to " + response[0].AppointmentEndTime + "");
-                        $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+                        // $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+                        $(".qr_date").text(moment(response[0].AppointmentDate, "DD-MM-YYYY").format('YYYY-MM-DD'));
+                        const startTimeCount = new Date(`2000-01-01T${response[0].AppointmentStartTime}`);
+                        const endTimeCount = new Date(`2000-01-01T${response[0].AppointmentEndTime}`);
+                        // Calculate the duration in milliseconds
+                        const durationInMilliseconds = endTimeCount - startTimeCount;
 
-                        $('.qrl-img img').css('width', '100px');
+                        // Convert milliseconds to hours
+                        const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
+                        $(".slot_hour").text(durationInHours + " hour")
+                        $('.qrl-img img').css({ width: "100%" });
+                        $('.qrl-img img').css("cssText", "width: 100% !important;");
 
 
                         resolve(response); // Resolve the promise after successful AJAX call
@@ -565,7 +574,15 @@ async function saveEventDetails() {
 
                 $(".table_date").text(item.AppointmentDate);
                 $(".table_slot").text("" + item.AppointmentStartTime + " to " + item.AppointmentEndTime + "");
-                $(".qr_date").text(moment(item.AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
+                $(".qr_date").text(moment(item.AppointmentDate, "DD-MM-YYYY").format('YYYY-MM-DD'));
+                const startTimeCount = new Date(`2000-01-01T${item.AppointmentStartTime}`);
+                const endTimeCount = new Date(`2000-01-01T${item.AppointmentEndTime}`);
+                // Calculate the duration in milliseconds
+                const durationInMilliseconds = endTimeCount - startTimeCount;
+
+                // Convert milliseconds to hours
+                const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
+                $(".slot_hour").text(durationInHours + " hour")
                 var element = (Template == "temp1") ? document.getElementsByClassName('Template1') : document.getElementsByClassName('Template2');
 
                 html2canvas(element).then(function (canvas) {

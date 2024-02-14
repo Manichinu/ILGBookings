@@ -2840,7 +2840,7 @@ body {
 
 .select-slot-time li.closed {
     background-color: #F5F5F5;
-    cursor:no-drop !important;
+    cursor: no-drop !important;
 }
 
 .form-wrap .manual-booking-table {
@@ -2910,7 +2910,8 @@ body {
     white-space: nowrap;
     cursor: pointer;
 }
-.action-close{
+
+.action-close {
     cursor: pointer;
 }
 
@@ -3384,7 +3385,7 @@ td.selected-date {
 }
 
 .qrl-img img {
-    width: 100px !important;
+    width: 100% !important;
 }
 
 #pending {
@@ -3402,12 +3403,19 @@ td.selected-date {
 #pending .tq-req-msg {
     text-align: center
 }
-#pending .schedule-info-card{
+
+#pending .schedule-info-card {
     padding: 20px !important;
 }
-#pending .copyurl p{
+
+#pending .copyurl p {
     font-size: 16px;
 }
+
 #pending .tq-req-msg img {
     width: 80px;
+}
+
+.date-closed {
+    cursor: no-drop !important;
 }
