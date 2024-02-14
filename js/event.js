@@ -416,6 +416,7 @@ function reqoff() {
 }
 async function saveEventDetails() {
     $("#pending").show();
+    var savedItems = []
     try {
         const ajaxPromises = bookings.map((item, key) => {
             return new Promise((resolve, reject) => {
@@ -449,6 +450,8 @@ async function saveEventDetails() {
 
                 $.ajax(postItem)
                     .done(function (response) {
+                        savedItems.push(response[0])
+                        console.log(savedItems)
                         if (Template == "temp1") {
                             $(".Template1").show();
                             $("#qr-code1").empty()
@@ -551,7 +554,18 @@ async function saveEventDetails() {
                 //$("#pending").hide();
             });
         } else {
-            bookings.forEach((item, index) => {
+            savedItems.forEach((item, index) => {
+                if (Template == "temp1") {
+                    $("#qr-code1").empty()
+                } else {
+                    $("#qr-code2").empty()
+                }
+                $(".qr_number").text(item.QRCodeText)
+                generateQrCode(item.ID);
+
+                $(".table_date").text(item.AppointmentDate);
+                $(".table_slot").text("" + item.AppointmentStartTime + " to " + item.AppointmentEndTime + "");
+                $(".qr_date").text(moment(item.AppointmentDate, "DD-MM-YYYY").format('MMM DD, YYYY'));
                 var element = (Template == "temp1") ? document.getElementsByClassName('Template1') : document.getElementsByClassName('Template2');
 
                 html2canvas(element).then(function (canvas) {
