@@ -47,7 +47,7 @@ html {
 }
 
 body {
-    letter-spacing: 0.9px;
+    /* letter-spacing: 0.9px; */
     font-family: regular !important;
     margin: 0;
 }
@@ -1891,7 +1891,7 @@ body {
 }
 
 .store-1-btn button {
-    letter-spacing: 2px;
+    /* letter-spacing: 2px; */
     background: #F27766;
     border: 0;
     width: 180px;

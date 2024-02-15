@@ -19,7 +19,9 @@ var pastSlots = [];
 var MapLink;
 var EventName;
 var Template;
-var BrandImages = []
+var BrandImages = [];
+var BookingApprovedCounts = []
+
 
 $(document).ready(function () {
     const searchParams = new URLSearchParams(window.location.search);
@@ -46,6 +48,7 @@ $(document).ready(function () {
 
 })
 function getEventsMaster() {
+    getEventBookingTransaction();
     getBrandsMaster();
     var Items = {
         "url": "https://prod-10.uaecentral.logic.azure.com:443/workflows/9a6d4449d1cb45848a25b73aa1514a0b/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4xHKwpYWyjFyG16vDDdcFFcOy6RkQ_GRnQ9aqq_F75U",
@@ -77,7 +80,6 @@ function getEventsMaster() {
                 MapLink = response[i].Map;
                 EventName = response[i].EventName;
                 Template = response[i].Template1 == true ? "temp1" : "temp2";
-                $(".brand_images").empty()
                 response[i].Brand.map((item) => {
                     BrandID.push(item.Id)
                 })
@@ -135,7 +137,9 @@ function getEventsMaster() {
             $(".date-picker").removeClass('active');
             $(this).addClass('active');
         })
-        $("#date-1").trigger('click');
+        setTimeout(() => {
+            $("#date-1").trigger('click');
+        }, 200)
 
         // check EndDate is Expired or not       
         if (moment(EndDate, "DD-MM-YYYY").isBefore(moment(), 'day')) {
@@ -184,7 +188,27 @@ function setTimeSlots(date) {
         }
 
     })
-    getEventBookingTransaction();
+    // getEventBookingTransaction();
+    const groupedByDateTime = BookingApprovedCounts.reduce((result, item) => {
+        const key = `${item.AppointmentDate}_${item.AppointmentStartTime}_${item.AppointmentEndTime}`;
+        (result[key] = result[key] || []).push(item);
+        return result;
+    }, {});
+    // Iterate through the grouped items and log each name
+    Object.values(groupedByDateTime).forEach(items => {
+        var ApprovedCount = 0;
+        items.map(val => {
+            if (val.Status.Value == "Approved") {
+                ApprovedCount += 1;
+            }
+        });
+        if (ApprovedCount >= NoofAttendees) {
+            var Date = moment(items[0].AppointmentDate, "DD-MM-YYYY").format("YYYY-MM-DD");
+            var Key = `${Date} | ${items[0].AppointmentStartTime} to ${items[0].AppointmentEndTime}`
+            $('li[key="' + Key + '"]').addClass('closed');
+            $('li[key="' + Key + '"]').removeAttr('onclick');
+        }
+    });
     const currentTime = moment();
     pastSlots.map((item) => {
         const slotTime = moment(item, 'hh:mm A');
@@ -516,25 +540,47 @@ async function saveEventDetails() {
             } else {
                 element = document.getElementsByClassName('Template2');
             }
+            // html2pdf(element);
+
             html2canvas(element).then(function (canvas) {
                 var imgWidth = 200;
                 var imgHeight = canvas.height * imgWidth / canvas.width;
                 const imgData = canvas.toDataURL('image/png');
                 const mynewpdf = new jsPDF('p', 'mm', 'a4');
                 var position = 0;
+                // Set the scale for the content
+                //var scale = 1.2; // Adjust this value to zoom in or out as needed
+
+                // mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth * scale, imgHeight * scale);
                 mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);
+
+                // Define page dimensions (A4)
+                var pageWidth = 210; // in millimeters
+                var pageHeight = 297; // in millimeters
+
+                // Define the link coordinates
                 var linkCoordinates = {
-                    x: 50,
-                    y: 34,
-                    width: 13,
-                    height: 3,
-                    url: '' + MapLink + ''
+                    xPercent: 0.22, // 22% from the left edge of the page
+                    yPercent: 0.129, // 12.9% from the top edge of the page
+                    width: 13, // Width of the link area
+                    height: 3, // Height of the link area
+                    url: '' + MapLink + '' // URL for the link
                 };
+
+                // Calculate the actual coordinates based on the page dimensions
+                var linkX = pageWidth * linkCoordinates.xPercent;
+                var linkY = pageHeight * linkCoordinates.yPercent;
 
                 mynewpdf.setDrawColor(0);
                 mynewpdf.setFillColor(255, 255, 255); // Transparent fill color
-                mynewpdf.rect(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, 'F');
-                mynewpdf.link(linkCoordinates.x, linkCoordinates.y, linkCoordinates.width, linkCoordinates.height, { url: linkCoordinates.url });
+
+                // Add the link and text label
+                mynewpdf.rect(linkX, linkY, linkCoordinates.width, linkCoordinates.height, 'F');
+                mynewpdf.link(linkX, linkY, linkCoordinates.width, linkCoordinates.height, { url: linkCoordinates.url });
+
+                // Calculate the position for the text label
+                var textX = linkX + 1; // Offset the text label from the left edge of the link
+                var textY = linkY + linkCoordinates.height - 1; // Offset the text label below the link
 
                 // Set text color
                 mynewpdf.setTextColor(72, 147, 193); // Set text color to white
@@ -543,12 +589,9 @@ async function saveEventDetails() {
                 mynewpdf.setFontSize(6); // Set font size to 12 points
                 mynewpdf.setFont('helvetica', 'normal'); // Set font to Helvetica, normal style
 
-                // Calculate position for the text label
-                var textX = linkCoordinates.x + 1; // Offset the text label from the left edge of the link
-                var textY = linkCoordinates.y + linkCoordinates.height - 1; // Offset the text label below the link
-
                 // Add the text label
                 mynewpdf.text('' + MapLink + '', textX, textY); // Display 'Click Here' as the text label
+
                 mynewpdf.save('Ticket.pdf');
 
                 setTimeout(() => {
@@ -562,6 +605,8 @@ async function saveEventDetails() {
                 console.error('Error capturing element:', error);
                 //$("#pending").hide();
             });
+
+
         } else {
             savedItems.forEach((item, index) => {
                 if (Template == "temp1") {
@@ -678,27 +723,32 @@ function getEventBookingTransaction() {
         },
     };
     $.ajax(Items).done(function (response) {
+        BookingApprovedCounts = []
         // Group the inventory by 'date'
-        const groupedByDateTime = response.reduce((result, item) => {
-            const key = `${item.AppointmentDate}_${item.AppointmentStartTime}_${item.AppointmentEndTime}`;
-            (result[key] = result[key] || []).push(item);
-            return result;
-        }, {});
-        // Iterate through the grouped items and log each name
-        Object.values(groupedByDateTime).forEach(items => {
-            var ApprovedCount = 0;
-            items.map(val => {
-                if (val.Status.Value == "Approved") {
-                    ApprovedCount += 1;
-                }
-            });
-            if (ApprovedCount >= NoofAttendees) {
-                var Date = moment(items[0].AppointmentDate, "DD-MM-YYYY").format("YYYY-MM-DD");
-                var Key = `${Date} | ${items[0].AppointmentStartTime} to ${items[0].AppointmentEndTime}`
-                $('li[key="' + Key + '"]').addClass('closed');
-                $('li[key="' + Key + '"]').removeAttr('onclick');
-            }
-        });
+        for (var i = 0; i < response.length; i++) {
+            BookingApprovedCounts.push(response[i])
+        }
+        // console.log(BookingApprovedCounts)
+        // const groupedByDateTime = response.reduce((result, item) => {
+        //     const key = `${item.AppointmentDate}_${item.AppointmentStartTime}_${item.AppointmentEndTime}`;
+        //     (result[key] = result[key] || []).push(item);
+        //     return result;
+        // }, {});
+        // // Iterate through the grouped items and log each name
+        // Object.values(groupedByDateTime).forEach(items => {
+        //     var ApprovedCount = 0;
+        //     items.map(val => {
+        //         if (val.Status.Value == "Approved") {
+        //             ApprovedCount += 1;
+        //         }
+        //     });
+        //     if (ApprovedCount >= NoofAttendees) {
+        //         var Date = moment(items[0].AppointmentDate, "DD-MM-YYYY").format("YYYY-MM-DD");
+        //         var Key = `${Date} | ${items[0].AppointmentStartTime} to ${items[0].AppointmentEndTime}`
+        //         $('li[key="' + Key + '"]').addClass('closed');
+        //         $('li[key="' + Key + '"]').removeAttr('onclick');
+        //     }
+        // });
     });
 }
 function generateRandomAlphaNumeric() {

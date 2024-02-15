@@ -277,7 +277,7 @@ function handleNavigate(newDate) {
         timeSlots.map((item, key) => {
             var timeSlotsWithoutSpaces;
             if (IsOutofOfficeScheduled == true) {
-                timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.Name == storeName).map(slot =>
+                timeSlotsWithoutSpaces = OutOfOfficeTimeSlot.filter(item => item.store == storeID).map(slot =>
                     slot.Time.replace(/\s+/g, '')
                 );
             } else {
@@ -375,8 +375,9 @@ function GetOutOfOfficeDetails() {
     $.ajax(Items).done(function (response) {
         OutOfOfficeTimeSlot = [];
         for (var i = 0; i < response.length; i++) {
-            OutOfOfficeTimeSlot.push({ Name: response[i].Title, Time: `${response[i].SelectedDate} | ${response[i].SlotStartTime} to ${response[i].SlotEndTime}` })
+            OutOfOfficeTimeSlot.push({ Name: response[i].Title, Time: `${response[i].SelectedDate} | ${response[i].SlotStartTime} to ${response[i].SlotEndTime}`, store: response[i].StoreId })
         }
+        console.log(response)
     });
 }
 function GetAccompanyPeopleCount() {
