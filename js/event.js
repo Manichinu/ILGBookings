@@ -821,6 +821,7 @@ function getRSVPEventBookingTransaction() {
         for (var i = 0; i < response.length; i++) {
             if (UserEventID == response[i].UserEventID) {
                 console.log("RSVP", response[i])
+                $("#form_heading").text(`RSVP for ${response[i].EventName} - ${response[i].AppointmentDate}  ${response[i].AppointmentStartTime} to ${response[i].AppointmentEndTime}`)
                 UserID = response[i].ID
                 if (response[i].RSVP == "Yes" && response[i].UserVisited == "Yes") {
                     $("#accepted_section").show()
@@ -834,8 +835,8 @@ function getRSVPEventBookingTransaction() {
                     $(".edit_rsvp").remove();
                     $(".popupBox__btn").prop("disabled", true);
                 }
-                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isAfter(moment(), 'day')) {
-
+                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isBefore(moment(), 'day')) {
+                    $("#event_done").show()
                 }
             }
         }

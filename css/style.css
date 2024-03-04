@@ -1586,7 +1586,7 @@ body {
 
 .reject-btn {
     margin-right: 0px;
-    background: #F27766;
+    background: #F27766 !important;
     color: #ffffff;
     border: none;
     border-radius: 3px;
@@ -3611,4 +3611,13 @@ td.selected-date {
     width: 22px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 8px;
+}
+#event_done{
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    font-family: 'poppins-medium';
+    color: #fb6944;
+    opacity: 1;
+    font-weight: 500;
 }
