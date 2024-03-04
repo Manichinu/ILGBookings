@@ -21,6 +21,8 @@ var EventName;
 var Template;
 var BrandImages = [];
 var BookingApprovedCounts = []
+var UserEventID;
+var UserID;
 
 
 $(document).ready(function () {
@@ -28,7 +30,9 @@ $(document).ready(function () {
     const hasEventID = searchParams.has("e_02");
     if (hasEventID) {
         EventID = searchParams.get("e_02");
-        getEventsMaster();
+        UserEventID = searchParams.get("e_02");
+        // getEventsMaster();
+        getRSVPEventBookingTransaction();
     } else {
     }
     $('#number').keypress(function (e) {
@@ -800,3 +804,95 @@ function generateQrCode(id) {
     }
 }
 
+function getRSVPEventBookingTransaction() {
+    var Items = {
+        "url": "https://prod-20.uaecentral.logic.azure.com:443/workflows/320466af42e042029867ca345d9b99a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Cis8LzDqIQBXoXHuqpbj_gQHeIaGkmBm2hfNLheuyV8",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+            "Content-Type": "application/json;odata=verbose",
+            "Access-Control-Allow-Origin": "*"
+        },
+    };
+    $.ajax(Items).done(function (response) {
+        for (var i = 0; i < response.length; i++) {
+            if (UserEventID == response[i].UserEventID) {
+                console.log("RSVP", response[i])
+                UserID = response[i].ID
+                if (response[i].RSVP == "Yes" && response[i].UserVisited == "Yes") {
+                    $("#accepted_section").show()
+                    $(".selected-img").hide()
+                } else if (response[i].RSVP == "No" && response[i].UserVisited == "Yes") {
+                    $("#rejected_section").show()
+                    $(".selected-img").hide()
+                }
+
+                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isSameOrBefore(moment(), 'day')) {
+                    $(".edit_rsvp").remove();
+                    $(".popupBox__btn").prop("disabled", true);
+                }
+                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isSameOrAfter(moment(), 'day')) {
+                   
+                }
+                return;
+            }
+        }
+        setTimeout(() => {
+            $("#loader-Icon").remove()
+        }, 500);
+    });
+}
+function AcceptRSVP() {
+    var postItem = {
+        url: "https://prod-03.uaecentral.logic.azure.com:443/workflows/5c6c1a11b43948de831d7fc4d04a89b2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7D_4LX1ku2CG8IQHIIT5KvdpwUuw247vLmNGA6lawMg",
+        method: "POST",
+        timeout: 0,
+        cors: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            "Accept": "application/json; odata=nometadata",
+            "Content-Type": "application/json; odata=nometadata"
+        },
+        "data": JSON.stringify({
+            ID: UserID,
+            Status: "Accept"
+        }),
+    };
+
+    $.ajax(postItem)
+        .done(function (response) {
+            $("#accepted_section").show()
+            $(".selected-img").hide()
+            $("#rejected_section").hide()
+        })
+}
+function RejectRSVP() {
+    var postItem = {
+        url: "https://prod-03.uaecentral.logic.azure.com:443/workflows/5c6c1a11b43948de831d7fc4d04a89b2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7D_4LX1ku2CG8IQHIIT5KvdpwUuw247vLmNGA6lawMg",
+        method: "POST",
+        timeout: 0,
+        cors: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            "Accept": "application/json; odata=nometadata",
+            "Content-Type": "application/json; odata=nometadata"
+        },
+        "data": JSON.stringify({
+            ID: UserID,
+            Status: "Reject"
+        }),
+    };
+
+    $.ajax(postItem)
+        .done(function (response) {
+            $("#rejected_section").show()
+            $(".selected-img").hide()
+            $("#accepted_section").hide()
+        })
+}
+function editAcceptedRSVP() {
+    $("#accepted_section .btn_info").addClass("active")
+}
+function editRejectedRSVP() {
+    $("#rejected_section .btn_info").addClass("active")
+}

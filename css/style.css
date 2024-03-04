@@ -3231,8 +3231,7 @@ td.selected-date {
     overflow-y: auto;
 }
 
-.loading-in-progress::before {
-    /* background cover */
+/* .loading-in-progress::before {
     content: '';
     position: fixed;
     left: 0;
@@ -3244,7 +3243,6 @@ td.selected-date {
 }
 
 .loading-in-progress::after {
-    /* spinner */
     content: '';
     position: fixed;
     left: 50vw;
@@ -3255,7 +3253,7 @@ td.selected-date {
     background-image: url(../img/loader.gif);
     background-repeat: no-repeat;
     z-index: 100000;
-}
+} */
 
 .appointment-book-form {
     display: inline-block;
@@ -3418,4 +3416,199 @@ td.selected-date {
 
 .date-closed {
     cursor: no-drop !important;
+}
+
+/* 29/02/2024 css updated by mariammal */
+.popupBox {
+    width: max-content;
+    margin: 0 auto;
+    /* background: rgb(242 119 102 / 55%); */
+    /* padding: 40px; */
+    border-radius: 30px;
+}
+
+.popupBox__content {
+    position: relative;
+    width: 600px;
+    height: 280px;
+    background: #fff;
+    border-radius: 30px;
+    display: flex;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.popupBox__img {
+    position: relative;
+    width: 300px;
+    height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 40px;
+}
+
+.popupBox__img img {
+    width: 100%;
+}
+
+/* .popupBox__img::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: #e7ffe0;
+    border-radius: 50%;
+  } */
+
+.popupBox__img img {
+    position: relative;
+    max-width: 100%;
+    z-index: 1;
+}
+
+.popupBox__contentTwo {
+    position: relative;
+    width: 300px;
+    height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupBox__title {
+    color: #333;
+    line-height: 1em;
+    font-weight: 300;
+    font-size: 2em;
+}
+
+.popupBox__titleTwo {
+    font-size: 4em;
+    color: #887fff;
+    line-height: 1em;
+}
+
+.popupBox__titleTwo span {
+    color: #333;
+    font-size: 0.75em;
+    text-transform: uppercase;
+}
+
+.popupBox__description {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.popupBox__btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #20744A;
+    text-decoration: none;
+    color: #fff;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.popupBox__img img {
+    position: relative;
+    max-width: 250px;
+    z-index: 1;
+}
+
+.popupBox__contentTwo {
+    position: relative;
+    width: 300px;
+    height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupBox__title {
+    color: #333;
+    line-height: 1em;
+    font-weight: 300;
+    font-size: 2em;
+}
+
+.popupBox__titleTwo {
+    font-size: 4em;
+    color: #887fff;
+    line-height: 1em;
+}
+
+.popupBox__titleTwo span {
+    color: #333;
+    font-size: 0.75em;
+    text-transform: uppercase;
+}
+
+.popupBox__description {
+    font-weight: 300;
+}
+
+.popupBox__btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #20744A;
+    text-decoration: none;
+    color: #fff;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.popupBox__btn:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.rsvp-data {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.event-appoinment-form {
+    height: 90vh;
+}
+
+.popupBox__btn[disabled] {
+    opacity: 0.5;
+}
+
+.btn_info .edit-accept {
+    display: none;
+}
+
+.btn_info .edit-reject {
+    display: none;
+}
+
+.btn_info.active .edit-select-btn {
+    display: none;
+}
+
+.edit-select-btn {
+    position: relative;
+}
+
+.btn_info.active .edit-accept {
+    display: inline-block;
+}
+
+.btn_info.active .edit-reject {
+    display: inline-block;
+}
+
+.edit-select-btn span {
+    position: absolute;
+    top: -9px;
+    right: -7px;
+}
+
+.edit-select-btn span img {
+    width: 22px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 8px;
 }

@@ -28,77 +28,156 @@
 
 <body>
     <div id="loader-Icon" class="loading-in-progress"></div>
-    <div class="appointment-book-form" style="display: none;">
+    <div class="appointment-book-form" style="display: block;">
         <img src="img/bg-1.png" class="bg-img" />
         <div class="store-appoinment-page event-appoinment-form">
-            <div class="logo-sec">
-                <img src="./img/footer-logo_1.png">
-            </div>
-            <h2 class="form-title">Kindly, Fill out the Event Form</h2>
-            <p class="form-sub-title" id="company_name"></p>
-            <div class="form-wrap">
-                <div class="input-sec">
-                    <div class="row">
-                        <div class="col-md-6 required">
-                            <div class="form-group">
-                                <label for="usr" class="float-label">Name<span>*</span></label>
-                                <input type="text" autocomplete="off" placeholder="Enter Full Name" class="form-control"
-                                    id="name" />
-                                <p class="err-msg" style="display: none;" id="fname-error">This field is required</p>
-                            </div>
+            <div class="rsvp-data">
+                <div class="logo-sec">
+                    <img src="./img/footer-logo_1.png">
+                </div>
+                <h2 class="form-title">Kindly, Fill out the Event Form</h2>
+                <p class="form-sub-title" id="company_name"></p>
+                <div class="popupBox selected-img">
+                    <div class="popupBox__content">
+                        <div class="close"></div>
+                        <div class="popupBox__img">
+                            <img src="img/rsvp-img.svg" alt="">
                         </div>
-                        <div class="col-md-6 required">
-                            <div class="form-group">
-                                <label for="usr" class="float-label">Phone No<span>*</span></label>
-                                <input type="text" autocomplete="off" placeholder="Enter Phone No" class="form-control"
-                                    id="number" />
-                                <p class="err-msg" style="display: none;" id="phone-error">This field is required</p>
-                            </div>
-                        </div>
+                        <div class="popupBox__contentTwo">
+                            <div style="
+    text-align: center;
+">
 
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 required">
-                            <div class="form-group">
-                                <label for="usr" class="float-label">E-Mail<span>*</span></label>
-                                <input type="text" autocomplete="off" placeholder="Enter E-Mail" class="form-control"
-                                    id="email" />
-                                <p class="err-msg" style="display: none;" id="email-error">This field is required</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 required">
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <label for="usr" class="float-label">Event Name<span>*</span></label>
-                                    <input type="text" readonly placeholder="Enter Event Name" class="form-control"
-                                        id="event_name" />
-                                </div>
-                            </div>
-                        </div>
 
-                    </div>
-                    <div class="row add-map" id="map_location">
-                        <div class="col-md-6 required">
-                            <div class="form-group">
-                                <label for="usr" class="float-label">Venue<span>*</span></label>
-                                <input readonly type="text"
-                                    placeholder=" WB27-WB28 Logistics District - Dubai South - Dubai - UAE"
-                                    class="form-control" id="venue" />
+                                <p class="popupBox__description">Please confirm your RSVP</p>
+                                <button class="popupBox__btn accept-btn" onclick="AcceptRSVP()">Accept</button>
+
+                                <button="#" class="popupBox__btn reject-btn" onclick="RejectRSVP()" style="
+    background: #F27766;
+">Reject</button>
                             </div>
-                        </div>
-                        <div class="col-md-6 location-map required"><label htmlFor="usr"
-                                class="location-label">Location<span>*</span></label>
-                            <div class="location-url"><a id="location" href="" data-interception='off'
-                                    target='_blank'>Click
-                                    here to see</a></div>
                         </div>
                     </div>
                 </div>
-                <div class="event-visit">
-                    <h2>Event Visit Booking</h2>
+                <div class="popupBox accepted-msg" id="accepted_section" style="display: none;">
+                    <div class="popupBox__content">
+                        <div class="close"></div>
+                        <div class="popupBox__img">
+                            <img src="img/accept-img.svg" alt="">
+                        </div>
+                        <div class="popupBox__contentTwo">
+                            <div style="text-align: center;" class="btn_info">
 
-                    <div class="date-pic clearfix" id="inbetween_dates">
-                        <!-- <div class="date-picker f-left">
+
+                                <p class="popupBox__description">Status of RSVP</p>
+                                <button href="#" class="popupBox__btn accept-btn edit-select-btn">Accepted<span><img
+                                            onclick="editAcceptedRSVP()" src="img/edit-rsvp.svg"
+                                            class="edit_rsvp"></span></button>
+                                <button onclick="AcceptRSVP()"
+                                    class="popupBox__btn accept-btn edit-accept">Accept</button>
+                                <button onclick="RejectRSVP()" href="#" class="popupBox__btn reject-btn edit-reject"
+                                    style="background: #F27766;">Reject</button>
+
+                                <!-- <a href="#" class="popupBox__btn reject-btn" style="background: #F27766;">Reject</a></div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="popupBox recjected-msg" id="rejected_section" style="display: none;">
+                    <div class="popupBox__content">
+                        <div class="close"></div>
+                        <div class="popupBox__img">
+                            <img src="img/reject-img.svg" alt="">
+                        </div>
+                        <div class="popupBox__contentTwo">
+                            <div style="text-align: center;
+" class="btn_info">
+
+
+                                <p class="popupBox__description">Status of RSVP</p>
+                                <button href="#" class="popupBox__btn accept-btn edit-select-btn">Rejected<span><img
+                                            onclick="editRejectedRSVP()" src="img/edit-rsvp.svg"
+                                            class="edit_rsvp"></span></button>
+                                <button onclick="AcceptRSVP()"
+                                    class="popupBox__btn accept-btn edit-accept">Accept</button>
+                                <button onclick="RejectRSVP()" href="#" class="popupBox__btn reject-btn edit-reject"
+                                    style="background: #F27766;">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-section" style="display: none;">
+                <div class="logo-sec">
+                    <img src="./img/footer-logo_1.png">
+                </div>
+                <h2 class="form-title">Kindly, Fill out the Event Form</h2>
+                <div class="form-wrap">
+                    <div class="input-sec">
+                        <div class="row">
+                            <div class="col-md-6 required">
+                                <div class="form-group">
+                                    <label for="usr" class="float-label">Name<span>*</span></label>
+                                    <input type="text" autocomplete="off" placeholder="Enter Full Name"
+                                        class="form-control" id="name" />
+                                    <p class="err-msg" style="display: none;" id="fname-error">This field is
+                                        required</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 required">
+                                <div class="form-group">
+                                    <label for="usr" class="float-label">Phone No<span>*</span></label>
+                                    <input type="text" autocomplete="off" placeholder="Enter Phone No"
+                                        class="form-control" id="number" />
+                                    <p class="err-msg" style="display: none;" id="phone-error">This field is
+                                        required</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 required">
+                                <div class="form-group">
+                                    <label for="usr" class="float-label">E-Mail<span>*</span></label>
+                                    <input type="text" autocomplete="off" placeholder="Enter E-Mail"
+                                        class="form-control" id="email" />
+                                    <p class="err-msg" style="display: none;" id="email-error">This field is
+                                        required</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 required">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="usr" class="float-label">Event Name<span>*</span></label>
+                                        <input type="text" readonly placeholder="Enter Event Name" class="form-control"
+                                            id="event_name" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row add-map" id="map_location">
+                            <div class="col-md-6 required">
+                                <div class="form-group">
+                                    <label for="usr" class="float-label">Venue<span>*</span></label>
+                                    <input readonly type="text"
+                                        placeholder=" WB27-WB28 Logistics District - Dubai South - Dubai - UAE"
+                                        class="form-control" id="venue" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 location-map required"><label htmlFor="usr"
+                                    class="location-label">Location<span>*</span></label>
+                                <div class="location-url"><a id="location" href="" data-interception='off'
+                                        target='_blank'>Click
+                                        here to see</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-visit">
+                        <h2>Event Visit Booking</h2>
+
+                        <div class="date-pic clearfix" id="inbetween_dates">
+                            <!-- <div class="date-picker f-left">
                         <p class="mnth-name">Nov</p>
                         <h3 class="date-no">26</h3>
 
@@ -108,7 +187,7 @@
                         <h3 class="date-no">26</h3>
 
                     </div> -->
-                        <!-- <div class="date-picker f-left">
+                            <!-- <div class="date-picker f-left">
                             <p class="mnth-name" id="start_month"></p>
                             <h3 class="date-no" id="start_date"></h3>
                         </div>
@@ -117,67 +196,69 @@
                             <h3 class="date-no" id="end_date"></h3>
                         </div> -->
 
+                        </div>
                     </div>
-                </div>
-                <div class="booking-slot-wrap">
-                    <div class="row">
+                    <div class="booking-slot-wrap">
+                        <div class="row">
 
-                        <div class="col-md-12 book-slot">
+                            <div class="col-md-12 book-slot">
 
-                            <div>
-                                <h4>Select Slot Time</h4>
-                                <div class="select-slot-time">
-                                    <ul id="slots">
-                                    </ul>
+                                <div>
+                                    <h4>Select Slot Time</h4>
+                                    <div class="select-slot-time">
+                                        <ul id="slots">
+                                        </ul>
 
+                                    </div>
                                 </div>
+
                             </div>
 
                         </div>
 
                     </div>
+                    <div class="manual-booking-table">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Event Start Time</th>
+                                        <th>Event End Time</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="booked_slots">
 
-                </div>
-                <div class="manual-booking-table">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Event Start Time</th>
-                                    <th>Event End Time</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="booked_slots">
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- to pass active class near req-btn the button will be active  -->
-                <div class="req-btn">
-                    <button class="btn-wrap" disabled id="submit" onclick="saveEventDetails()">Book
-                        Appointment</button>
-                    <div id="StoreBookingURL" style="display: none;">
-                        <div id="schedule" class="overlay-1">
-                            <div class="popup_header_2 clearfix">
-                                <img src="./img/close-icon.svg" onclick="reqoff()" alt="close-icon" class="close-icon">
-                            </div>
-                            <div class="schedule-info-card copyurl">
-                                <div class="tq-req-msg">
-                                    <img src="./img/tq-req.svg" class="req-img">
-                                    <h3>Thank you!!!</h3>
-                                    <h5>Your request for an appointment has been received.</h5>
-                                    <p>We will get back to you on the Registered
-                                        E-mail.</p>
-                                </div>
-                            </div>
-
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
+                    <!-- to pass active class near req-btn the button will be active  -->
+                    <div class="req-btn">
+                        <button class="btn-wrap" disabled id="submit" onclick="saveEventDetails()">Book
+                            Appointment</button>
+                        <div id="StoreBookingURL" style="display: none;">
+                            <div id="schedule" class="overlay-1">
+                                <div class="popup_header_2 clearfix">
+                                    <img src="./img/close-icon.svg" onclick="reqoff()" alt="close-icon"
+                                        class="close-icon">
+                                </div>
+                                <div class="schedule-info-card copyurl">
+                                    <div class="tq-req-msg">
+                                        <img src="./img/tq-req.svg" class="req-img">
+                                        <h3>Thank you!!!</h3>
+                                        <h5>Your request for an appointment has been received.</h5>
+                                        <p>We will get back to you on the Registered
+                                            E-mail.</p>
+                                    </div>
+                                </div>
 
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -293,7 +374,8 @@
                                     <tr style="background: #FFEAE5;
                                     border: 0;">
                                         <th style="border-top: 0;border-bottom: 0px solid #ddd;">Date</th>
-                                        <th style="border-top: 0;border-bottom: 0px solid #ddd;">Event Slot Timing</th>
+                                        <th style="border-top: 0;border-bottom: 0px solid #ddd;">Event Slot
+                                            Timing</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -325,7 +407,8 @@
                             text-align: center;
                             margin-left: 30px;"></div>
 
-                            <p class="code-no" style="font-size: 11px;">Code No: <span class="qr_number"></span></p>
+                            <p class="code-no" style="font-size: 11px;">Code No: <span class="qr_number"></span>
+                            </p>
                             <p class="code-no qr-code-w" style="position: absolute;
                             top: 30%;
                             right: 3px;
@@ -371,7 +454,7 @@ padding-top: 10px;margin-bottom: 10px;">
                     padding-top: 0px !important;
                     margin-bottom: 30px;
                     height: auto !important;" class="brand_images">
-                       
+
                     </ul>
                 </div>
 
@@ -542,8 +625,10 @@ margin-bottom: 20px;">
                                 <thead>
                                     <tr style="background: #D10303;
                                 border: 0;">
-                                        <th style="border-top: 0;border-bottom: 0px solid #ddd; color: #fff;">Date</th>
-                                        <th style="border-top: 0;border-bottom: 0px solid #ddd;color: #fff;">Event Slot
+                                        <th style="border-top: 0;border-bottom: 0px solid #ddd; color: #fff;">
+                                            Date</th>
+                                        <th style="border-top: 0;border-bottom: 0px solid #ddd;color: #fff;">
+                                            Event Slot
                                             Timing</th>
                                     </tr>
                                 </thead>
@@ -575,7 +660,8 @@ margin-bottom: 20px;">
                             text-align: center;
                             margin-left: 30px;"></div>
 
-                            <p class="code-no" style="font-size: 11px;">Code No: <span class="qr_number"></span></p>
+                            <p class="code-no" style="font-size: 11px;">Code No: <span class="qr_number"></span>
+                            </p>
                             <p class="code-no qr-code-w" style="position: absolute;
                         top: 30%;
                         right: 3px;
@@ -614,7 +700,7 @@ color: #fff !important;border-radius: 3px;
 padding-top: 10px;height: 90px;">
                     <ul style="list-style: none;margin-bottom: 0;
 display: flex;padding-left:53px" class="brand_images" id="brand1">
-                       
+
                     </ul>
                 </div>
 
