@@ -813,6 +813,9 @@ function getRSVPEventBookingTransaction() {
             "Content-Type": "application/json;odata=verbose",
             "Access-Control-Allow-Origin": "*"
         },
+        "data": JSON.stringify({
+            UserEventID: UserEventID
+        }),
     };
     $.ajax(Items).done(function (response) {
         for (var i = 0; i < response.length; i++) {
@@ -831,14 +834,13 @@ function getRSVPEventBookingTransaction() {
                     $(".edit_rsvp").remove();
                     $(".popupBox__btn").prop("disabled", true);
                 }
-                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isSameOrAfter(moment(), 'day')) {
-                   
+                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isAfter(moment(), 'day')) {
+
                 }
-                return;
             }
         }
         setTimeout(() => {
-            $("#loader-Icon").remove()
+            $("#loader-Icon").css("display", "none");
         }, 500);
     });
 }

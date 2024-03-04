@@ -3231,7 +3231,7 @@ td.selected-date {
     overflow-y: auto;
 }
 
-/* .loading-in-progress::before {
+.loading-in-progress::before {
     content: '';
     position: fixed;
     left: 0;
@@ -3253,7 +3253,7 @@ td.selected-date {
     background-image: url(../img/loader.gif);
     background-repeat: no-repeat;
     z-index: 100000;
-} */
+}
 
 .appointment-book-form {
     display: inline-block;
