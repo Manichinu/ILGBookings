@@ -864,9 +864,11 @@ function AcceptRSVP() {
 
     $.ajax(postItem)
         .done(function (response) {
+            $("#accepted_section .btn_info").removeClass("active")
             $("#accepted_section").show()
             $(".selected-img").hide()
             $("#rejected_section").hide()
+
         })
 }
 function RejectRSVP() {
@@ -888,9 +890,11 @@ function RejectRSVP() {
 
     $.ajax(postItem)
         .done(function (response) {
+            $("#rejected_section .btn_info").removeClass("active")
             $("#rejected_section").show()
             $(".selected-img").hide()
             $("#accepted_section").hide()
+
         })
 }
 function editAcceptedRSVP() {
