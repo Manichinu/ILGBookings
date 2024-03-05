@@ -834,10 +834,11 @@ function getRSVPEventBookingTransaction() {
                 if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isSameOrBefore(moment(), 'day')) {
                     $(".edit_rsvp").remove();
                     $(".popupBox__btn").prop("disabled", true);
-                }
-                if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isBefore(moment(), 'day')) {
                     $("#event_done").show()
                 }
+                // if (moment(response[i].AppointmentDate, "YYYY-MM-DD").isBefore(moment(), 'day')) {
+                //     $("#event_done").show()
+                // }
             }
         }
         setTimeout(() => {
