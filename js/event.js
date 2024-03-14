@@ -806,7 +806,7 @@ function generateQrCode(id) {
 
 function getRSVPEventBookingTransaction() {
     var Items = {
-        "url": "https://prod-20.uaecentral.logic.azure.com:443/workflows/320466af42e042029867ca345d9b99a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Cis8LzDqIQBXoXHuqpbj_gQHeIaGkmBm2hfNLheuyV8",
+        "url": "https://prod-27.uaecentral.logic.azure.com:443/workflows/4e226d08b3b34586b82694a015cfbbfd/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qc4cPkFc5jKYs59jCzWOh15XWH-KTA5_R_JquvS55dg",
         "method": "POST",
         "timeout": 0,
         "headers": {
