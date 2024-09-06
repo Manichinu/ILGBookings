@@ -821,6 +821,14 @@ function getRSVPEventBookingTransaction() {
         for (var i = 0; i < response.length; i++) {
             if (UserEventID == response[i].UserEventID) {
                 console.log("RSVP", response[i])
+                var TemplateType = response[i].Eventcreatedfor
+                if (TemplateType == "MaisonLuxe") {
+                    $('#logo_img').attr('src', "./img/maison_luxe.png");
+                    $('#logo_img').addClass("maison_img");
+                } else {
+                    $('#logo_img').attr('src', "./img/footer-logo_1.png");
+
+                }
                 $("#form_heading").text(`RSVP for ${response[i].EventName} - ${response[i].AppointmentDate}  ${response[i].AppointmentStartTime} to ${response[i].AppointmentEndTime}`)
                 UserID = response[i].ID
                 if (response[i].RSVP == "Yes" && response[i].UserVisited == "Yes") {
