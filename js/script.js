@@ -21,6 +21,7 @@ var isDayClickEnabled = true;
 var pastSlots = [];
 var IsOutofOfficeScheduled;
 var StoreExpiryDate;
+var BookingDays;
 
 
 $(document).ready(function () {
@@ -76,6 +77,11 @@ $(document).ready(function () {
             var Date = date.format();
             selectedDateValue = Date;
             clickedMonth = moment(Date, "YYYY-MM-DD").format("MMMM YYYY");
+
+            // Get the day of the week (e.g., "Mon", "Tue", etc.)
+            var selectedDayOfWeek = moment(Date).format("ddd");
+            // console.log("Selected day of the week: " + selectedDayOfWeek);
+
             if (moment(Date, "YYYY-MM-DD").isBefore(moment(), 'day')) {
                 return;
             } else {
@@ -86,6 +92,11 @@ $(document).ready(function () {
                 } else {
                     $("#no_slot").hide();
                 }
+                // if (!BookingDays.includes(selectedDayOfWeek)) {
+                //     $("#no_slot").show();
+                //     $("#slots").empty();
+                //     return;
+                // }
                 $("#select_date").text(Date)
                 handleNavigate(Date);
                 $(".fc-center h2").text(clickedMonth);
@@ -174,6 +185,8 @@ function storeNameHandler() {
         var CurrentDate = moment().format('YYYY-MM-DD');
         for (var i = 0; i < response.length; i++) {
             if (response[i].Title == storeName) {
+                console.log(response[i])
+                BookingDays = response[i].StoreWorkingDays.Value
                 IsOutofOfficeScheduled = response[i].IsOutofOfficeScheduled;
                 EndDate = response[i].EndDate;
                 slotBookingStartTime = response[i].SlotBookingStartTime;
